@@ -247,6 +247,7 @@ ModelManifest.xml
 .doxygen
 
 # Ignore specific template outputs
+Src/ILGPU/*.Generated.cs
 Src/ILGPU/ArrayViews.cs
 Src/ILGPU/AtomicFunctions.cs
 Src/ILGPU/Backends/PTX/PTXIntrinsics.Generated.cs

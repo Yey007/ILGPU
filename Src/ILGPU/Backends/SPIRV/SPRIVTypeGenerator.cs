@@ -1,6 +1,4 @@
-﻿using ILGPU.Backends.OpenCL;
-using ILGPU.IR.Types;
-using ILGPU.Runtime.OpenCL;
+﻿using ILGPU.IR.Types;
 using ILGPU.Util;
 using System;
 using System.Collections.Generic;
@@ -13,92 +11,89 @@ namespace ILGPU.Backends.SPIRV
     /// </summary>
     public class SPRIVTypeGenerator
     {
-        private readonly Dictionary<TypeNode, string> nodeToIdMapping =
-            new Dictionary<TypeNode, string>();
+        private readonly Dictionary<TypeNode, uint> nodeToIdMapping =
+            new Dictionary<TypeNode, uint>();
 
         /// <summary>
         /// Generates or gets a SPIR-V type definition for a node
         /// </summary>
         /// <param name="typeNode">The type node to generate the definition for</param>
-        /// <param name="lastId">The last word id used</param>
+        /// <param name="currentIdhe last word id used</param>
         /// <param name="currentId">The next word id that should be used</param>
         /// <returns>The type definition</returns>
         /// <remarks>
         /// This will generate THE ENTIRE DEFINITION, including assignment to and id etc.
         /// </remarks>
-        public string GetOrGenerateTypeDefinition(TypeNode typeNode, int lastId, out int currentId)
+        public List<Word> GetOrGenerateTypeDefinition(TypeNode typeNode, uint currentId, out uint nextId)
         {
             Debug.Assert(!(typeNode is ViewType), "Invalid view type");
 
-            currentId = lastId;
+            nextId = currentId;
 
-            if (nodeToIdMapping.TryGetValue(typeNode, out string id))
+            if (nodeToIdMapping.TryGetValue(typeNode, out uint id))
             {
-                return id;
+                return new List<Word>
+                {
+                    new Word(id)
+                };
             }
 
 
             switch (typeNode)
             {
                 case VoidType v:
-                    return GenerateVoidType(v, lastId, out currentId);
+                    return GenerateVoidType(v, currentId, out nextId);
                 case PrimitiveType p:
-                    return GeneratePrimitiveType(p, lastId, out currentId);
+                    return GeneratePrimitiveType(p, currentId, out nextId);
                 default:
                     throw new InvalidCodeGenerationException();
             }
         }
 
-        private string GenerateVoidType(VoidType typeNode, int lastId, out int currentId)
+        private List<Word> GenerateVoidType(VoidType typeNode, uint currentId, out uint nextId)
         {
-            currentId = lastId + 1;
-            string idString = $"%{lastId}";
-            string def = $"{idString} {nameof(SPIRVHeaders.Op.OpTypeVoid)}";
-            nodeToIdMapping[typeNode] = idString;
-            return def;
+            nextId = currentId + 1;
+            nodeToIdMapping[typeNode] = currentId;
+            return new List<Word>
+            {
+                new Word(new SplitWord(2, SPIRVHeaders.Op.OpTypeVoid)),
+                new Word(currentId)
+            };
         }
 
-        private string GeneratePrimitiveType(PrimitiveType typeNode, int lastId, out int currentId)
+        private List<Word> GeneratePrimitiveType(PrimitiveType typeNode, uint currentId, out uint nextId)
         {
-            currentId = lastId + 1;
-            string idString = $"%{lastId}";
-            string def = $"{idString} ";
+            nextId = currentId + 1;
+            var list = new List<Word>();
 
             if (typeNode.BasicValueType.IsInt())
             {
-                def += $"{nameof(SPIRVHeaders.Op.OpTypeInt)} ";
                 switch (typeNode.BasicValueType)
                 {
                     case BasicValueType.Int1:
-                        def += "1";
+                        list.Add(new Word(new SplitWord(4, SPIRVHeaders.Op.OpTypeInt)));
+                        list.Add(new Word(1));
+                        list.Add(new Word(1));
                         break;
                     case BasicValueType.Int8:
-                        def += "8";
                         break;
                     case BasicValueType.Int16:
-                        def += "16";
                         break;
                     case BasicValueType.Int32:
-                        def += "32";
                         break;
                     case BasicValueType.Int64:
-                        def += "64";
                         break;
                 }
             }
             else if (typeNode.BasicValueType.IsFloat())
             {
-                def += $"{nameof(SPIRVHeaders.Op.OpTypeFloat)} ";
                 switch (typeNode.BasicValueType)
                 {
                     case BasicValueType.Float16:
-                        def += "16";
                         break;
                     case BasicValueType.Float32:
-                        def += "32";
                         break;
                     case BasicValueType.Float64:
-                        def += "64";
                         break;
                 }
             }
@@ -108,7 +103,7 @@ namespace ILGPU.Backends.SPIRV
                 throw new NotImplementedException();
             }
 
-            return def;
+            return list;
         }
     }
 }

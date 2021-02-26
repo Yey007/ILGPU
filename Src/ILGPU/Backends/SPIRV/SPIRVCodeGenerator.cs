@@ -1,6 +1,6 @@
 ﻿using ILGPU.Backends.EntryPoints;
 using ILGPU.IR.Analyses;
-using System.Text;
+using System.Collections.Generic;
 
 namespace ILGPU.Backends.SPIRV
 {
@@ -8,8 +8,7 @@ namespace ILGPU.Backends.SPIRV
     /// A SPIR-V code generator.
     /// </summary>
     public abstract partial class SPIRVCodeGenerator :
-        SPIRVVariableAllocator,
-        IBackendCodeGenerator<StringBuilder>
+        SPIRVVariableAllocator, IBackendCodeGenerator<List<Word>>
     {
         #region Nested Types
 
@@ -62,7 +61,7 @@ namespace ILGPU.Backends.SPIRV
 
         #region Instance
 
-        public StringBuilder Builder { get; }
+        public List<Word> Builder { get; }
 
         /// <summary>
         /// Constructs a new code generator.
@@ -71,7 +70,7 @@ namespace ILGPU.Backends.SPIRV
         internal SPIRVCodeGenerator(in GeneratorArgs args)
             : base(args.TypeGenerator)
         {
-            Builder = new StringBuilder();
+            Builder = new List<Word>();
         }
 
         #endregion
@@ -81,7 +80,7 @@ namespace ILGPU.Backends.SPIRV
         /// <summary>
         /// Generates a function declaration in SPIR-V code.
         /// </summary>
-        public abstract void GenerateHeader(StringBuilder builder);
+        public abstract void GenerateHeader(List<Word> builder);
 
         /// <summary>
         /// Generates SPIR-V code.
@@ -92,14 +91,15 @@ namespace ILGPU.Backends.SPIRV
         /// Generates SPIR-V constant declarations.
         /// </summary>
         /// <param name="builder">The target builder.</param>
-        public void GenerateConstants(StringBuilder builder)
+        public void GenerateConstants(List<Word> builder)
         {
             // No constants to emit
         }
 
         /// <summary cref="IBackendCodeGenerator{TKernelBuilder}.Merge(TKernelBuilder)"/>
-        public void Merge(StringBuilder builder) =>
-            builder.Append(builder.ToString());
+        public void Merge(List<Word> builder) =>
+            builder.AddRange(Builder);
+
 
         #endregion
     }
