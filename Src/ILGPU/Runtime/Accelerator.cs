@@ -40,6 +40,11 @@ namespace ILGPU.Runtime
         /// Represents an OpenCL accelerator (CPU/GPU via OpenCL).
         /// </summary>
         OpenCL,
+
+        /// <summary>
+        /// Represents an Vulkan accelerator (CPU/GPU via Vulkan).
+        /// </summary>
+        Vulkan,
     }
 
     /// <summary>

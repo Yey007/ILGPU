@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ILGPU.Tests.OpenCL", "ILGPU
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ILGPU.Tests.SPIRV", "ILGPU.Tests.SPIRV\ILGPU.Tests.SPIRV.csproj", "{453CFA75-6944-47F3-B33A-6007B8353358}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VulkanTestConsole", "VulkanTestConsole\VulkanTestConsole.csproj", "{3080BF69-83D1-4394-B6EB-164073214D5D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -99,6 +101,18 @@ Global
 		{453CFA75-6944-47F3-B33A-6007B8353358}.Release|x64.Build.0 = Release|Any CPU
 		{453CFA75-6944-47F3-B33A-6007B8353358}.Release|x86.ActiveCfg = Release|Any CPU
 		{453CFA75-6944-47F3-B33A-6007B8353358}.Release|x86.Build.0 = Release|Any CPU
+		{3080BF69-83D1-4394-B6EB-164073214D5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3080BF69-83D1-4394-B6EB-164073214D5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3080BF69-83D1-4394-B6EB-164073214D5D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3080BF69-83D1-4394-B6EB-164073214D5D}.Debug|x64.Build.0 = Debug|Any CPU
+		{3080BF69-83D1-4394-B6EB-164073214D5D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3080BF69-83D1-4394-B6EB-164073214D5D}.Debug|x86.Build.0 = Debug|Any CPU
+		{3080BF69-83D1-4394-B6EB-164073214D5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3080BF69-83D1-4394-B6EB-164073214D5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3080BF69-83D1-4394-B6EB-164073214D5D}.Release|x64.ActiveCfg = Release|Any CPU
+		{3080BF69-83D1-4394-B6EB-164073214D5D}.Release|x64.Build.0 = Release|Any CPU
+		{3080BF69-83D1-4394-B6EB-164073214D5D}.Release|x86.ActiveCfg = Release|Any CPU
+		{3080BF69-83D1-4394-B6EB-164073214D5D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

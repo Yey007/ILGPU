@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Imports Namespace="ILGPU.Runtime.Vulkan"
+         ClassName="VulkanAPI"
+         DefaultReturnType="VkResult"
+         NotSupportedException="RuntimeErrorMessages.VulkanNotSupported">
+    <LibraryNames>
+        <Windows>vulkan-1</Windows>
+        <Linux>vulkan-1</Linux>
+        <MacOS>vulkan-1</MacOS>
+    </LibraryNames>
+    <Import Name="vkCreateInstance" CharSet="Ansi">
+        <Parameter Name="pCreateInfo" Type="VkInstanceCreateInfo" Flags="Ref"/>
+        <Parameter Name="pAllocator" Type="IntPtr"/>
+        <Parameter Name="pInstance" Type="IntPtr" Flags="Out"/>
+    </Import>
+    <Import Name="vkEnumeratePhysicalDevices">
+        <Parameter Name="instance" Type="IntPtr"/>
+        <Parameter Name="pPhysicalDeviceCount" Type="uint" Flags="Ref"/>
+        <Parameter Name="pPhysicalDevices" Type="IntPtr*" DllFlags="Out"/>
+    </Import>
+    <Import ReturnType="void" Name="vkGetPhysicalDeviceProperties" CharSet="Ansi">
+        <Parameter Name="physicalDevice" Type="IntPtr"/>
+        <Parameter Name="pProperties" Type="VkPhysicalDeviceProperties*"/>
+    </Import>
+</Imports>

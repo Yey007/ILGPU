@@ -19,7 +19,7 @@ namespace ILGPU.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class RuntimeErrorMessages {
@@ -273,6 +273,15 @@ namespace ILGPU.Resources {
         internal static string NotSupportedTotalGroupSize {
             get {
                 return ResourceManager.GetString("NotSupportedTotalGroupSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vulkan is not supported on this platform.
+        /// </summary>
+        internal static string VulkanNotSupported {
+            get {
+                return ResourceManager.GetString("VulkanNotSupported", resourceCulture);
             }
         }
     }

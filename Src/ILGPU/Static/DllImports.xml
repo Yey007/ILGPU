@@ -5,4 +5,7 @@
 
     <!-- The OpenCL API -->
     <File>../Runtime/OpenCL/CLAPI.xml</File>
+
+    <!-- The Vulkan API -->
+    <File>../Runtime/Vulkan/VulkanAPI.xml</File>
 </ImportFiles>

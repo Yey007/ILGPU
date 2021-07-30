@@ -189,4 +189,7 @@
   <data name="NotSupportedTotalGroupSize" xml:space="preserve">
     <value>Not supported total group size. The total group size must be &lt;= the number of available threads ({0})</value>
   </data>
+  <data name="VulkanNotSupported" xml:space="preserve">
+      <value>Vulkan is not supported on this platform</value>
+  </data>
 </root>
