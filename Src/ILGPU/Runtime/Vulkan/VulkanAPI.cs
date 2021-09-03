@@ -61,7 +61,7 @@ namespace ILGPU.Runtime.Vulkan
         public VkPhysicalDeviceProperties GetPhysicalDeviceProperties(IntPtr device)
         {
             var properties = new VkPhysicalDeviceProperties();
-            vkGetPhysicalDeviceProperties(device, &properties);
+            vkGetPhysicalDeviceProperties(device, ref properties);
             return properties;
         }
     }

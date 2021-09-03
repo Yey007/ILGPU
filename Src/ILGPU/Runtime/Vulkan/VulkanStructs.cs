@@ -1,27 +1,9 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace ILGPU.Runtime.Vulkan
 {
-    [StructLayout(LayoutKind.Sequential)]
-    unsafe struct VkApplicationInfo
-    {
-        VkStructureType sType;
-        void* pNext;
-        byte* pApplicationName; // byte* to match c++ 8-bit chars
-        uint applicationVersion;
-        byte* pEngineName;
-        uint engineVersion;
-        uint apiVersion;
-
-        // Structs can't have explicit 0-parameter constructors
-        public static VkApplicationInfo New() =>
-            new VkApplicationInfo
-            {
-                sType = VkStructureType.VK_STRUCTURE_TYPE_APPLICATION_INFO
-            };
-    };
-
     [StructLayout(LayoutKind.Sequential)]
     unsafe struct VkInstanceCreateInfo
     {
@@ -41,6 +23,25 @@ namespace ILGPU.Runtime.Vulkan
             };
     }
 
+    [StructLayout(LayoutKind.Sequential)]
+    unsafe struct VkApplicationInfo
+    {
+        VkStructureType sType;
+        void* pNext;
+        byte* pApplicationName; // byte* to match c++ 8-bit chars
+        uint applicationVersion;
+        byte* pEngineName;
+        uint engineVersion;
+        uint apiVersion;
+
+        // Structs can't have explicit 0-parameter constructors
+        public static VkApplicationInfo New() =>
+            new VkApplicationInfo
+            {
+                sType = VkStructureType.VK_STRUCTURE_TYPE_APPLICATION_INFO
+            };
+    };
+
     // Reserved for future use
     enum VkInstanceCreateFlags
     {
@@ -49,18 +50,40 @@ namespace ILGPU.Runtime.Vulkan
     [StructLayout(LayoutKind.Sequential)]
     public unsafe struct VkPhysicalDeviceProperties
     {
-        uint apiVersion;
-        uint driverVersion;
-        uint vendorID;
-        uint deviceID;
-        VkPhysicalDeviceType deviceType;
-        public fixed byte deviceName[256];
-        fixed byte pipelineCacheUUID[16];
-        VkPhysicalDeviceLimits limits;
-        VkPhysicalDeviceSparseProperties sparseProperties;
+        public uint apiVersion;
+        public uint driverVersion;
+        public uint vendorID;
+        public uint deviceID;
+        public VkPhysicalDeviceType deviceType;
+        private fixed byte deviceName[256];
+        private fixed byte pipelineCacheUUID[16];
+        public VkPhysicalDeviceLimits limits;
+        public VkPhysicalDeviceSparseProperties sparseProperties;
+
+        public string Name
+        {
+            get
+            {
+                fixed (byte* fixedName = deviceName)
+                {
+                    return Encoding.ASCII.GetString(fixedName, 256).Trim('\0');
+                }
+            }
+        }
+
+        public string PipelineCacheUUID
+        {
+            get
+            {
+                fixed (byte* fixedUUID = pipelineCacheUUID)
+                {
+                    return Encoding.ASCII.GetString(fixedUUID, 256).Trim('\0');
+                }
+            }
+        }
     };
 
-    enum VkPhysicalDeviceType
+    public enum VkPhysicalDeviceType
     {
         VK_PHYSICAL_DEVICE_TYPE_OTHER = 0,
         VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU = 1,
@@ -70,118 +93,118 @@ namespace ILGPU.Runtime.Vulkan
     };
 
     [StructLayout(LayoutKind.Sequential)]
-    unsafe struct VkPhysicalDeviceLimits
+    public unsafe struct VkPhysicalDeviceLimits
     {
-        uint maxImageDimension1D;
-        uint maxImageDimension2D;
-        uint maxImageDimension3D;
-        uint maxImageDimensionCube;
-        uint maxImageArrayLayers;
-        uint maxTexelBufferElements;
-        uint maxUniformBufferRange;
-        uint maxStorageBufferRange;
-        uint maxPushConstantsSize;
-        uint maxMemoryAllocationCount;
-        uint maxSamplerAllocationCount;
-        ulong bufferImageGranularity;
-        ulong sparseAddressSpaceSize;
-        uint maxBoundDescriptorSets;
-        uint maxPerStageDescriptorSamplers;
-        uint maxPerStageDescriptorUniformBuffers;
-        uint maxPerStageDescriptorStorageBuffers;
-        uint maxPerStageDescriptorSampledImages;
-        uint maxPerStageDescriptorStorageImages;
-        uint maxPerStageDescriptorInputAttachments;
-        uint maxPerStageResources;
-        uint maxDescriptorSetSamplers;
-        uint maxDescriptorSetUniformBuffers;
-        uint maxDescriptorSetUniformBuffersDynamic;
-        uint maxDescriptorSetStorageBuffers;
-        uint maxDescriptorSetStorageBuffersDynamic;
-        uint maxDescriptorSetSampledImages;
-        uint maxDescriptorSetStorageImages;
-        uint maxDescriptorSetInputAttachments;
-        uint maxVertexInputAttributes;
-        uint maxVertexInputBindings;
-        uint maxVertexInputAttributeOffset;
-        uint maxVertexInputBindingStride;
-        uint maxVertexOutputComponents;
-        uint maxTessellationGenerationLevel;
-        uint maxTessellationPatchSize;
-        uint maxTessellationControlPerVertexInputComponents;
-        uint maxTessellationControlPerVertexOutputComponents;
-        uint maxTessellationControlPerPatchOutputComponents;
-        uint maxTessellationControlTotalOutputComponents;
-        uint maxTessellationEvaluationInputComponents;
-        uint maxTessellationEvaluationOutputComponents;
-        uint maxGeometryShaderInvocations;
-        uint maxGeometryInputComponents;
-        uint maxGeometryOutputComponents;
-        uint maxGeometryOutputVertices;
-        uint maxGeometryTotalOutputComponents;
-        uint maxFragmentInputComponents;
-        uint maxFragmentOutputAttachments;
-        uint maxFragmentDualSrcAttachments;
-        uint maxFragmentCombinedOutputResources;
-        uint maxComputeSharedMemorySize;
-        fixed uint maxComputeWorkGroupCount[3];
-        uint maxComputeWorkGroupInvocations;
-        fixed uint maxComputeWorkGroupSize[3];
-        uint subPixelPrecisionBits;
-        uint subTexelPrecisionBits;
-        uint mipmapPrecisionBits;
-        uint maxDrawIndexedIndexValue;
-        uint maxDrawIndirectCount;
-        float maxSamplerLodBias;
-        float maxSamplerAnisotropy;
-        uint maxViewports;
-        fixed uint maxViewportDimensions[2];
-        fixed float viewportBoundsRange[2];
-        uint viewportSubPixelBits;
-        UIntPtr minMemoryMapAlignment;
-        ulong minTexelBufferOffsetAlignment;
-        ulong minUniformBufferOffsetAlignment;
-        ulong minStorageBufferOffsetAlignment;
-        int minTexelOffset;
-        uint maxTexelOffset;
-        int minTexelGatherOffset;
-        uint maxTexelGatherOffset;
-        float minInterpolationOffset;
-        float maxInterpolationOffset;
-        uint subPixelInterpolationOffsetBits;
-        uint maxFramebufferWidth;
-        uint maxFramebufferHeight;
-        uint maxFramebufferLayers;
-        uint framebufferColorSampleCounts;
-        uint framebufferDepthSampleCounts;
-        uint framebufferStencilSampleCounts;
-        uint framebufferNoAttachmentsSampleCounts;
-        uint maxColorAttachments;
-        uint sampledImageColorSampleCounts;
-        uint sampledImageIntegerSampleCounts;
-        uint sampledImageDepthSampleCounts;
-        uint sampledImageStencilSampleCounts;
-        uint storageImageSampleCounts;
-        uint maxSampleMaskWords;
-        uint timestampComputeAndGraphics;
-        float timestampPeriod;
-        uint maxClipDistances;
-        uint maxCullDistances;
-        uint maxCombinedClipAndCullDistances;
-        uint discreteQueuePriorities;
-        fixed float pointSizeRange[2];
-        fixed float lineWidthRange[2];
-        float pointSizeGranularity;
-        float lineWidthGranularity;
-        uint strictLines;
-        uint standardSampleLocations;
-        ulong optimalBufferCopyOffsetAlignment;
-        ulong optimalBufferCopyRowPitchAlignment;
-        ulong nonCoherentAtomSize;
+        public uint maxImageDimension1D;
+        public uint maxImageDimension2D;
+        public uint maxImageDimension3D;
+        public uint maxImageDimensionCube;
+        public uint maxImageArrayLayers;
+        public uint maxTexelBufferElements;
+        public uint maxUniformBufferRange;
+        public uint maxStorageBufferRange;
+        public uint maxPushConstantsSize;
+        public uint maxMemoryAllocationCount;
+        public uint maxSamplerAllocationCount;
+        public ulong bufferImageGranularity;
+        public ulong sparseAddressSpaceSize;
+        public uint maxBoundDescriptorSets;
+        public uint maxPerStageDescriptorSamplers;
+        public uint maxPerStageDescriptorUniformBuffers;
+        public uint maxPerStageDescriptorStorageBuffers;
+        public uint maxPerStageDescriptorSampledImages;
+        public uint maxPerStageDescriptorStorageImages;
+        public uint maxPerStageDescriptorInputAttachments;
+        public uint maxPerStageResources;
+        public uint maxDescriptorSetSamplers;
+        public uint maxDescriptorSetUniformBuffers;
+        public uint maxDescriptorSetUniformBuffersDynamic;
+        public uint maxDescriptorSetStorageBuffers;
+        public uint maxDescriptorSetStorageBuffersDynamic;
+        public uint maxDescriptorSetSampledImages;
+        public uint maxDescriptorSetStorageImages;
+        public uint maxDescriptorSetInputAttachments;
+        public uint maxVertexInputAttributes;
+        public uint maxVertexInputBindings;
+        public uint maxVertexInputAttributeOffset;
+        public uint maxVertexInputBindingStride;
+        public uint maxVertexOutputComponents;
+        public uint maxTessellationGenerationLevel;
+        public uint maxTessellationPatchSize;
+        public uint maxTessellationControlPerVertexInputComponents;
+        public uint maxTessellationControlPerVertexOutputComponents;
+        public uint maxTessellationControlPerPatchOutputComponents;
+        public uint maxTessellationControlTotalOutputComponents;
+        public uint maxTessellationEvaluationInputComponents;
+        public uint maxTessellationEvaluationOutputComponents;
+        public uint maxGeometryShaderInvocations;
+        public uint maxGeometryInputComponents;
+        public uint maxGeometryOutputComponents;
+        public uint maxGeometryOutputVertices;
+        public uint maxGeometryTotalOutputComponents;
+        public uint maxFragmentInputComponents;
+        public uint maxFragmentOutputAttachments;
+        public uint maxFragmentDualSrcAttachments;
+        public uint maxFragmentCombinedOutputResources;
+        public uint maxComputeSharedMemorySize;
+        public fixed uint maxComputeWorkGroupCount[3];
+        public uint maxComputeWorkGroupInvocations;
+        public fixed uint maxComputeWorkGroupSize[3];
+        public uint subPixelPrecisionBits;
+        public uint subTexelPrecisionBits;
+        public uint mipmapPrecisionBits;
+        public uint maxDrawIndexedIndexValue;
+        public uint maxDrawIndirectCount;
+        public float maxSamplerLodBias;
+        public float maxSamplerAnisotropy;
+        public uint maxViewports;
+        public fixed uint maxViewportDimensions[2];
+        public fixed float viewportBoundsRange[2];
+        public uint viewportSubPixelBits;
+        public UIntPtr minMemoryMapAlignment;
+        public ulong minTexelBufferOffsetAlignment;
+        public ulong minUniformBufferOffsetAlignment;
+        public ulong minStorageBufferOffsetAlignment;
+        public int minTexelOffset;
+        public uint maxTexelOffset;
+        public int minTexelGatherOffset;
+        public uint maxTexelGatherOffset;
+        public float minInterpolationOffset;
+        public float maxInterpolationOffset;
+        public uint subPixelInterpolationOffsetBits;
+        public uint maxFramebufferWidth;
+        public uint maxFramebufferHeight;
+        public uint maxFramebufferLayers;
+        public uint framebufferColorSampleCounts;
+        public uint framebufferDepthSampleCounts;
+        public uint framebufferStencilSampleCounts;
+        public uint framebufferNoAttachmentsSampleCounts;
+        public uint maxColorAttachments;
+        public uint sampledImageColorSampleCounts;
+        public uint sampledImageIntegerSampleCounts;
+        public uint sampledImageDepthSampleCounts;
+        public uint sampledImageStencilSampleCounts;
+        public uint storageImageSampleCounts;
+        public uint maxSampleMaskWords;
+        public uint timestampComputeAndGraphics;
+        public float timestampPeriod;
+        public uint maxClipDistances;
+        public uint maxCullDistances;
+        public uint maxCombinedClipAndCullDistances;
+        public uint discreteQueuePriorities;
+        public fixed float pointSizeRange[2];
+        public fixed float lineWidthRange[2];
+        public float pointSizeGranularity;
+        public float lineWidthGranularity;
+        public uint strictLines;
+        public uint standardSampleLocations;
+        public ulong optimalBufferCopyOffsetAlignment;
+        public ulong optimalBufferCopyRowPitchAlignment;
+        public ulong nonCoherentAtomSize;
     };
 
     [StructLayout(LayoutKind.Sequential)]
-    struct VkPhysicalDeviceSparseProperties
+    public struct VkPhysicalDeviceSparseProperties
     {
         uint residencyStandard2DBlockShape;
         uint residencyStandard2DMultisampleBlockShape;
@@ -2317,5 +2340,102 @@ namespace ILGPU.Runtime.Vulkan
         // Provided by VK_EXT_host_query_reset
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES_EXT =
             VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES,
+    }
+
+    public enum VkResult
+    {
+        VK_SUCCESS = 0,
+        VK_NOT_READY = 1,
+        VK_TIMEOUT = 2,
+        VK_EVENT_SET = 3,
+        VK_EVENT_RESET = 4,
+        VK_INCOMPLETE = 5,
+        VK_ERROR_OUT_OF_HOST_MEMORY = -1,
+        VK_ERROR_OUT_OF_DEVICE_MEMORY = -2,
+        VK_ERROR_INITIALIZATION_FAILED = -3,
+        VK_ERROR_DEVICE_LOST = -4,
+        VK_ERROR_MEMORY_MAP_FAILED = -5,
+        VK_ERROR_LAYER_NOT_PRESENT = -6,
+        VK_ERROR_EXTENSION_NOT_PRESENT = -7,
+        VK_ERROR_FEATURE_NOT_PRESENT = -8,
+        VK_ERROR_INCOMPATIBLE_DRIVER = -9,
+        VK_ERROR_TOO_MANY_OBJECTS = -10,
+        VK_ERROR_FORMAT_NOT_SUPPORTED = -11,
+        VK_ERROR_FRAGMENTED_POOL = -12,
+        VK_ERROR_UNKNOWN = -13,
+
+        // Provided by VK_VERSION_1_1
+        VK_ERROR_OUT_OF_POOL_MEMORY = -1000069000,
+
+        // Provided by VK_VERSION_1_1
+        VK_ERROR_INVALID_EXTERNAL_HANDLE = -1000072003,
+
+        // Provided by VK_VERSION_1_2
+        VK_ERROR_FRAGMENTATION = -1000161000,
+
+        // Provided by VK_VERSION_1_2
+        VK_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS = -1000257000,
+
+        // Provided by VK_KHR_surface
+        VK_ERROR_SURFACE_LOST_KHR = -1000000000,
+
+        // Provided by VK_KHR_surface
+        VK_ERROR_NATIVE_WINDOW_IN_USE_KHR = -1000000001,
+
+        // Provided by VK_KHR_swapchain
+        VK_SUBOPTIMAL_KHR = 1000001003,
+
+        // Provided by VK_KHR_swapchain
+        VK_ERROR_OUT_OF_DATE_KHR = -1000001004,
+
+        // Provided by VK_KHR_display_swapchain
+        VK_ERROR_INCOMPATIBLE_DISPLAY_KHR = -1000003001,
+
+        // Provided by VK_EXT_debug_report
+        VK_ERROR_VALIDATION_FAILED_EXT = -1000011001,
+
+        // Provided by VK_NV_glsl_shader
+        VK_ERROR_INVALID_SHADER_NV = -1000012000,
+
+        // Provided by VK_EXT_image_drm_format_modifier
+        VK_ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT = -1000158000,
+
+        // Provided by VK_EXT_global_priority
+        VK_ERROR_NOT_PERMITTED_EXT = -1000174001,
+
+        // Provided by VK_EXT_full_screen_exclusive
+        VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT = -1000255000,
+
+        // Provided by VK_KHR_deferred_host_operations
+        VK_THREAD_IDLE_KHR = 1000268000,
+
+        // Provided by VK_KHR_deferred_host_operations
+        VK_THREAD_DONE_KHR = 1000268001,
+
+        // Provided by VK_KHR_deferred_host_operations
+        VK_OPERATION_DEFERRED_KHR = 1000268002,
+
+        // Provided by VK_KHR_deferred_host_operations
+        VK_OPERATION_NOT_DEFERRED_KHR = 1000268003,
+
+        // Provided by VK_EXT_pipeline_creation_cache_control
+        VK_PIPELINE_COMPILE_REQUIRED_EXT = 1000297000,
+
+        // Provided by VK_KHR_maintenance1
+        VK_ERROR_OUT_OF_POOL_MEMORY_KHR = VK_ERROR_OUT_OF_POOL_MEMORY,
+
+        // Provided by VK_KHR_external_memory
+        VK_ERROR_INVALID_EXTERNAL_HANDLE_KHR = VK_ERROR_INVALID_EXTERNAL_HANDLE,
+
+        // Provided by VK_EXT_descriptor_indexing
+        VK_ERROR_FRAGMENTATION_EXT = VK_ERROR_FRAGMENTATION,
+
+        // Provided by VK_EXT_buffer_device_address
+        VK_ERROR_INVALID_DEVICE_ADDRESS_EXT = VK_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS,
+
+        // Provided by VK_KHR_buffer_device_address
+        VK_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR =
+            VK_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS,
+        VK_ERROR_PIPELINE_COMPILE_REQUIRED_EXT = VK_PIPELINE_COMPILE_REQUIRED_EXT,
     }
 }

@@ -1,15 +1,20 @@
 using System;
+using static ILGPU.Runtime.Vulkan.VulkanAPI;
 
 namespace ILGPU.Runtime.Vulkan
 {
-    public class VulkanAcceleratorId : AcceleratorId
+    public sealed class VulkanAcceleratorId : AcceleratorId
     {
         #region Instance
 
         /// <inheritdoc />
         public VulkanAcceleratorId(IntPtr physicalDevice) : base(AcceleratorType.Vulkan)
         {
+            PhysicalDevice = physicalDevice;
 
+            var properties = CurrentAPI.GetPhysicalDeviceProperties(physicalDevice);
+            DeviceType = properties.deviceType;
+            DeviceId = properties.deviceID;
         }
 
         #endregion
@@ -17,9 +22,19 @@ namespace ILGPU.Runtime.Vulkan
         #region Properties
 
         /// <summary>
-        /// Returns the Vulkan device id.
+        /// The physical device this AcceleratorId was created with.
         /// </summary>
-        public uint DeviceId { get; private set; }
+        public IntPtr PhysicalDevice { get; }
+
+        /// <summary>
+        /// The Vulkan Device ID of this device.
+        /// </summary>
+        public uint DeviceId { get; }
+
+        /// <summary>
+        /// The type of the device.
+        /// </summary>
+        public VkPhysicalDeviceType DeviceType { get; }
 
         #endregion
 

@@ -20,6 +20,6 @@
     </Import>
     <Import ReturnType="void" Name="vkGetPhysicalDeviceProperties" CharSet="Ansi">
         <Parameter Name="physicalDevice" Type="IntPtr"/>
-        <Parameter Name="pProperties" Type="VkPhysicalDeviceProperties*"/>
+        <Parameter Name="pProperties" Type="VkPhysicalDeviceProperties" Flags="Ref"/>
     </Import>
 </Imports>
