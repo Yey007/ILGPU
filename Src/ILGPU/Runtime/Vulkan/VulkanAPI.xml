@@ -22,4 +22,15 @@
         <Parameter Name="physicalDevice" Type="IntPtr"/>
         <Parameter Name="pProperties" Type="VkPhysicalDeviceProperties" Flags="Ref"/>
     </Import>
+    <Import ReturnType="void" Name="vkGetPhysicalDeviceQueueFamilyProperties">
+        <Parameter Name="physicalDevice" Type="IntPtr"/>
+        <Parameter Name="pPhysicalDeviceCount" Type="uint" Flags="Ref"/>
+        <Parameter Name="pQueueFamilyProperties" Type="VkQueueFamilyProperties*"/>
+    </Import>
+    <Import ReturnType="void" Name="vkGetDeviceQueue">
+        <Parameter Name="device" Type="IntPtr"/>
+        <Parameter Name="queueFamilyIndex" Type="uint" />
+        <Parameter Name="queueIndex" Type="uint"/>
+        <Parameter Name="pQueue" Type="IntPtr" Flags="Out"/>
+    </Import>
 </Imports>

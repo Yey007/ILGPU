@@ -44,6 +44,8 @@ namespace ILGPU.Runtime.Vulkan
         {
             Bind();
 
+            NativePtr = id.PhysicalDevice;
+
             var properties = CurrentAPI.GetPhysicalDeviceProperties(id.PhysicalDevice);
 
             Name = properties.Name;

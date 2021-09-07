@@ -213,6 +213,35 @@ namespace ILGPU.Runtime.Vulkan
         uint residencyNonResidentStrict;
     };
 
+    [StructLayout(LayoutKind.Sequential)]
+    public struct VkQueueFamilyProperties
+    {
+        public VkQueueFlags queueFlags;
+        public uint queueCount;
+        public uint timestampValidBits;
+        public VkExtent3D minImageTransferGranularity;
+    };
+
+    [Flags]
+    public enum VkQueueFlags
+    {
+        VK_QUEUE_GRAPHICS_BIT = 0x00000001,
+        VK_QUEUE_COMPUTE_BIT = 0x00000002,
+        VK_QUEUE_TRANSFER_BIT = 0x00000004,
+        VK_QUEUE_SPARSE_BINDING_BIT = 0x00000008,
+        VK_QUEUE_PROTECTED_BIT = 0x00000010,
+        VK_QUEUE_VIDEO_DECODE_BIT_KHR = 0x00000020,
+        VK_QUEUE_VIDEO_ENCODE_BIT_KHR = 0x00000040,
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct VkExtent3D
+    {
+        uint width;
+        uint height;
+        uint depth;
+    };
+
     enum VkStructureType
     {
         VK_STRUCTURE_TYPE_APPLICATION_INFO = 0,

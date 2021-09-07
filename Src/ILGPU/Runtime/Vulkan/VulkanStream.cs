@@ -1,9 +1,14 @@
+using static ILGPU.Runtime.Vulkan.VulkanAPI;
+
 namespace ILGPU.Runtime.Vulkan
 {
     public class VulkanStream : AcceleratorStream
     {
-        public VulkanStream(Accelerator accelerator) : base(accelerator)
+        public VulkanStream(VulkanAccelerator accelerator) : base(accelerator)
         {
+
+
+
         }
 
         protected override void DisposeAcceleratorObject(bool disposing) => throw new System.NotImplementedException();
