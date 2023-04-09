@@ -152,7 +152,7 @@ jobs:
     strategy:
       matrix:
         os: ${{ fromJson(needs.setup-os-matrix.outputs.os) }}
-        library: [ILGPU, ILGPU.Algorithms]
+        library: [ILGPU, ILGPU.Algorithms, ILGPU.Analyzers]
         framework: [netcoreapp3.1, net5.0, net6.0, net7.0]
         include:
           - os: windows-latest
@@ -161,6 +161,9 @@ jobs:
           - os: windows-latest
             library: ILGPU.Algorithms
             framework: net471
+        exclude:
+          - os: cuda-${{ github.run_id }}-${{ github.run_attempt }}
+            library: ILGPU.Analyzers
       fail-fast: false
     runs-on: ${{ contains(matrix.os, 'cuda') && format('{0}-{1}-{2}', matrix.os, matrix.library, matrix.framework) || matrix.os }}
     steps:
@@ -201,10 +204,15 @@ jobs:
       - name: Set test flavor
         id: test-flavor
         shell: bash
-        run: echo "flavor=$([[ "${{ matrix.os }}" == cuda-* ]] && echo "Cuda" || echo "CPU")" >> $GITHUB_OUTPUT
+        run: |
+          flavor="Tests.CPU"
+          [[ "${{ matrix.os }}" == cuda-* ]] && flavor="Tests.Cuda"
+          [[ "${{ matrix.library }}" == "ILGPU.Analyzers" ]] && flavor="Tests"
+
+          echo "flavor=$flavor" >> $GITHUB_OUTPUT
 
       - name: Build and test
-        run: dotnet test Src/${{ matrix.library }}.Tests.${{ steps.test-flavor.outputs.flavor }} --configuration=Release --framework=${{ matrix.framework }} -p:TreatWarningsAsErrors=true --logger GitHubActions
+        run: dotnet test Src/${{ matrix.library }}.${{ steps.test-flavor.outputs.flavor }} --configuration=Release --framework=${{ matrix.framework }} -p:TreatWarningsAsErrors=true --logger GitHubActions
         env:
           ILGPU_CLEAN_TESTS: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' || (github.event_name == 'push' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v'))) }}
 
