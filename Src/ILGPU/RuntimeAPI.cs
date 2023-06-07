@@ -10,6 +10,7 @@
 // ---------------------------------------------------------------------------------------
 
 using System;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace ILGPU
@@ -62,6 +63,7 @@ namespace ILGPU
             {
                 // In case of a critical initialization exception fall back to the
                 // not supported API
+                Console.WriteLine(ex);
                 return new TNotSupported();
             }
         }
