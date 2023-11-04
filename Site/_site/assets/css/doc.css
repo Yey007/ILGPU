@@ -1,0 +1,10 @@
+#breadcrumbs .container { margin-left: 340px; }
+
+#breadcrumbs .container.sidebar-collapsed { margin-left: 85px; }
+
+#breadcrumbs .container.sidebar-animated { transition: margin-left 300ms ease-in-out; }
+
+#search .empty-message { padding: 5px 10px; text-align: center; }
+
+#search .tt-suggestion { padding: 5px 10px; text-align: left; }
+#search .tt-suggestion:hover { color: #00458D; }

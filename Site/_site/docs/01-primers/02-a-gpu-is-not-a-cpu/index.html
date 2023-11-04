@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>A GPU Is Not A CPU | ILGPU - A Modern GPU Compiler for .Net Programs</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="A GPU Is Not A CPU" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Primer 01: Code" />
+<meta property="og:description" content="Primer 01: Code" />
+<link rel="canonical" href="http://localhost:4000/docs/01-primers/02-a-gpu-is-not-a-cpu/" />
+<meta property="og:url" content="http://localhost:4000/docs/01-primers/02-a-gpu-is-not-a-cpu/" />
+<meta property="og:site_name" content="ILGPU - A Modern GPU Compiler for .Net Programs" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-08-18T23:46:02-04:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="A GPU Is Not A CPU" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2023-08-18T23:46:02-04:00","datePublished":"2023-08-18T23:46:02-04:00","description":"Primer 01: Code","headline":"A GPU Is Not A CPU","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/docs/01-primers/02-a-gpu-is-not-a-cpu/"},"url":"http://localhost:4000/docs/01-primers/02-a-gpu-is-not-a-cpu/"}</script>
+<!-- End Jekyll SEO tag -->
+<!-- ARSHA Fonts -->
+    <link href="/assets/css/fonts.css" rel="stylesheet">
+    <!-- ARSHA Fonts -->
+
+    <!-- ARSHA Vendor CSS Files -->
+    <link href="/assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <!-- ARSHA Vendor CSS Files -->
+
+    <!-- Normalize CSS -->
+    <link rel="stylesheet" href="/assets/css/normalize.css">
+    <!-- Normalize CSS -->
+
+    <!-- ARSHA Template Main CSS File -->
+    <link rel="stylesheet"
+          href="/assets/css/sass.css">
+    <!-- ARSHA Template Main CSS File -->
+
+    <!-- custom CSS Files -->
+    <link rel="stylesheet" href="/assets/css/custom.css">
+    <!-- custom CSS Files --><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="ILGPU - A Modern GPU Compiler for .Net Programs" /><!-- Favicons -->
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon/favicon-16x16.png">
+<link rel="manifest" href="/assets/img/favicon/site.webmanifest">
+<link rel="mask-icon" href="/assets/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+<link rel="shortcut icon" href="/assets/img/favicon/favicon.ico">
+<meta name="msapplication-TileColor" content="#2b5797">
+<meta name="msapplication-config" content="/assets/img/favicon/browserconfig.xml">
+<meta name="theme-color" content="#ffffff">
+<!-- Favicons -->
+
+<!-- Extras CSS -->
+<link rel="stylesheet" href="/assets/css/site.css">
+<!-- Extras CSS -->
+
+        <!-- Code Highlighting -->
+<link rel="stylesheet" href="/assets/vendor/prism/prism.css">
+<!-- Code Highlighting -->
+
+<!-- Extras CSS -->
+<link rel="stylesheet" href="/assets/css/doc.css">
+
+<!-- Extras CSS -->
+
+    
+
+    
+
+</head>
+
+
+<body>
+
+
+
+
+
+
+
+
+
+
+
+<header id="header" class="fixed-top">
+    <div class="container d-flex align-items-center">
+
+        <a href="/" class="logo me-auto"></a>
+
+        <nav id="navbar" class="navbar">
+            <ul>
+                <li class="dropdown">
+                    <a href="#" class=""><span>About</span> <i
+                                class="bi bi-chevron-down"></i></a>
+                    <ul>
+                        <li><a href="/#learn-more" class="scrollto">Learn More</a></li>
+                        <li><a href="/#highlights" class="scrollto">Highlights</a></li>
+                        <li><a href="/#features" class="scrollto">Features</a></li>
+                        <li><a href="/#news" class="scrollto">News</a></li>
+                        <li><a href="/#faq" class="scrollto">FAQ</a></li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#"
+                       class=""><span>Project</span>
+                        <i class="bi bi-chevron-down"></i></a>
+                    <ul>
+                        <li><a target="_blank" href="https://github.com/m4rs-mt/ILGPU">Sourcecode</a></li>
+                        <li><a href="/releases/">Releases</a></li>
+                        <li><a href="/milestones/">Milestones</a></li>
+                    </ul>
+                </li>
+
+                <li><a class="nav-link active"
+                       href="/docs/">Documentation</a></li>
+                <li><a class="nav-link" target="_blank" href="https://discord.com/invite/X6RBCff">Discord</a></li>
+                <li><a class="getstarted scrollto" href="/#cta">Get Started</a></li>
+            </ul>
+            <i class="bi bi-list mobile-nav-toggle"></i>
+        </nav>
+    </div>
+</header><!-- End Header -->
+
+
+
+<!-- ======= Sidebar Section ======= -->
+<section id="sidebar">
+    <div id="sidebar-header">
+        
+        
+            <div class="container">
+                <div class="row">
+                    <a href="/docs/" class="col-9 my-auto"><h4 class="mb-0">Documentation</h4></a>
+                    <svg xmlns="http://www.w3.org/2000/svg" id="sidebar-collapse-icon" class="icon icon-tabler icon-tabler-chevron-left text-white col-3 my-auto" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M15 6l-6 6l6 6"></path>
+                    </svg>
+                </div>
+            </div>
+        
+    </div>
+
+    
+        <div id="search" class="ms-4 mb-4">
+            <input type="search" class="typeahead form-control" placeholder="Search..." aria-label="Search" size="18" />
+        </div>
+    
+
+    <nav id="wiki-nav">
+        
+        
+            <div class="section">
+                <h5>Primers</h5>
+                <ul>
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/01-primers/01-setting-up-ilgpu/"
+                                   >Setting Up ILGPU</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/01-primers/02-a-gpu-is-not-a-cpu/"
+                                   class="text-white">A GPU Is Not A CPU</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/01-primers/03-memory-and-bandwidth-threads/"
+                                   >Memory & Bandwidth Threads</a></li>
+                        
+                    
+                </ul>
+            </div>
+        
+            <div class="section">
+                <h5>Beginner</h5>
+                <ul>
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/02-beginner/01-context-and-accelerators/"
+                                   >Context & Accelerators</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/02-beginner/02-memorybuffers-and-arrayviews/"
+                                   >MemoryBuffers & ArrayViews</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/02-beginner/03-kernels-and-simple-programs/"
+                                   >Kernels & Simple Programs</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/02-beginner/04-structs/"
+                                   >Structs</a></li>
+                        
+                    
+                </ul>
+            </div>
+        
+            <div class="section">
+                <h5>Advanced</h5>
+                <ul>
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/03-advanced/01-memory-buffers-and-views/"
+                                   >Memory Buffers & Views</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/03-advanced/02-kernels/"
+                                   >Kernels</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/03-advanced/03-shared-memory/"
+                                   >Shared Memory</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/03-advanced/04-math-functions/"
+                                   >Math Functions</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/03-advanced/05-dynamically-specialized-kernels/"
+                                   >Dynamically Specialized Kernels</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/03-advanced/06-debugging-and-profiling/"
+                                   >Debugging & Profiling</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/03-advanced/07-inside-ilgpu/"
+                                   >Inside ILGPU</a></li>
+                        
+                    
+                </ul>
+            </div>
+        
+            <div class="section">
+                <h5>Upgrade Guides</h5>
+                <ul>
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/04-upgrade-guides/01-v0-8-x-to-v0-9-x/"
+                                   >v0.8.X to v0.9.X</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/04-upgrade-guides/02-v0-8-0-to-v0-8-1/"
+                                   >v0.8.0 to v0.8.1</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/04-upgrade-guides/03-v0-7-x-to-v0-8-x/"
+                                   >v0.7.X to v0.8.X</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/04-upgrade-guides/04-v0-6-x-to-v0-7-x/"
+                                   >v0.6.X to v0.7.X</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/04-upgrade-guides/05-v0-3-x-to-v0-5-x/"
+                                   >v0.3.X to v0.5.X</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/04-upgrade-guides/06-v0-1-x-to-v0-2-x/"
+                                   >v0.1.X to v0.2.X</a></li>
+                        
+                    
+                </ul>
+            </div>
+        
+        <ul>
+            
+        </ul>
+    </nav>
+
+    
+</section><!-- End Sidebar Section -->
+
+
+<main id="main">
+    
+
+
+<!-- ======= Breadcrumbs ======= -->
+<section id="breadcrumbs" class="breadcrumbs">
+    <div class="container">
+        <ol>
+            <li><a href="/">Home</a></li>
+            <li>A GPU Is Not A CPU</li>
+        </ol>
+        <h2>A GPU Is Not A CPU</h2>
+    </div>
+</section><!-- End Breadcrumbs -->
+
+
+    
+        <!-- ======= Inner Page Section ======= -->
+        <section id="wiki-main" class="inner-page collapsed">
+            <div class="container-fluid">
+                <h1 id="primer-01-code">Primer 01: Code</h1>
+
+<p>This page will provide a quick rundown of the basics of how kernels (think GPU programs) run.
+If you are already familiar with CUDA or OpenCL programs you can probably skip this.</p>
+
+<p>To steal a quote from a very good <a href="https://www.youtube.com/watch?v=uvVy3CqpVbM">talk</a> that you should <em>probably</em> watch.</p>
+
+<blockquote>
+  <p>You <strong>cannot</strong> program the GPU like its a CPU
+You must pay attention to 3 things</p>
+  <ol>
+    <li>
+      <p>Memory Access</p>
+    </li>
+    <li>
+      <p>Data Locality</p>
+    </li>
+    <li>
+      <p>Threading</p>
+    </li>
+  </ol>
+</blockquote>
+
+<h2 id="a-gpu-is-not-a-cpu">A GPU is not a CPU</h2>
+
+<p>If you will allow a little bit of <strong>massive oversimplification</strong>, this is pretty easy to understand.</p>
+
+<h3 id="how-does-a-cpu-work">How does a CPU work?</h3>
+
+<p>A traditional processor has a very simple cycle: fetch, decode, execute.</p>
+
+<p>It grabs an instruction from memory (the fetch), figures out how to perform said instruction (the decode),
+and does the instruction (the execute). This cycle then repeats for all the instructions in your algorithm.
+Executing this linear stream of instructions is fine for most programs because CPUs are super fast, and most
+algorithms are serial.</p>
+
+<p>What happens when you have an algorithm that can be processed in parallel? A CPU has multiple cores, each
+doing its own fetch, decode, execute. You can spread the algorithm across all the cores on the CPU, but
+in the end each core will still be running a stream of instructions, likely the <em>same</em> stream of instructions,
+but with <em>different</em> data.</p>
+
+<p>GPUs and CPUs both try to exploit this fact, but use two very different methods.</p>
+
+<h5 id="cpu--simd-single-instruction-multiple-data">CPU | SIMD: Single Instruction Multiple Data.</h5>
+
+<p>CPUs have a trick for parallel programs called SIMD. These are a set of instructions
+that allow you to have one instuction do operations on multiple pieces of data at once.</p>
+
+<p>Lets say a CPU has an add instruction:</p>
+<blockquote>
+  <p>ADD RegA RegB</p>
+</blockquote>
+
+<p>Which would perform</p>
+<blockquote>
+  <p>RegA = RegB + RegA</p>
+</blockquote>
+
+<p>The SIMD version would be:</p>
+<blockquote>
+  <p>ADD RegABCD RegEFGH</p>
+</blockquote>
+
+<p>Which would perform</p>
+<blockquote>
+  <p>RegA = RegE + RegA</p>
+
+  <p>RegB = RegF + RegB</p>
+
+  <p>RegC = RegG + RegC</p>
+
+  <p>RegD = RegH + RegD</p>
+</blockquote>
+
+<p>All at once.</p>
+
+<p>A clever programmer can take these instructions and get a 3x-8x performance improvement
+in very math heavy scenarios.</p>
+
+<h5 id="gpu--simt-single-instruction-multiple-threads">GPU | SIMT: Single Instruction Multiple Threads.</h5>
+
+<p>GPUs have SIMT. SIMT is the same idea as SIMD but instead of just doing the math instructions
+in parallel why not do <strong>all</strong> the instructions in parallel.</p>
+
+<p>The GPU assumes all the instructions you are going to fetch and decode for 32 threads are
+the same, it does 1 fetch and decode to setup 32 execute steps, then it does all 32 execute
+steps at once. This allows you to get 32 way multithreading per single core, if and only
+if all 32 threads want to do the same instruction.</p>
+
+<h3 id="kernels">Kernels</h3>
+
+<p>With this knowledge we can now talk about kernels. Kernels are just GPU programs, but because
+a GPU program is not a single thread, but many, it works a little different.</p>
+
+<p>When I was first learning about kernels I had an observation that made kernels kinda <em>click</em>
+in my head.</p>
+
+<p>Kernels and Parallel.For have the same usage pattern.</p>
+
+<p>If you don’t know about Parallel.For it is a function that provides a really easy way to run
+code on every core of the CPU. All you do is pass in the start index, an end index, and a function
+that takes an index. Then the function is called from some thread with an index. There are no guarantees
+about what core an index is run on, or what order the threads are run, but you get a <strong>very</strong> simple
+interface for running parallel functions.</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Threading.Tasks</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="nc">Program</span>
+<span class="p">{</span>
+    <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">//Load the data</span>
+        <span class="kt">int</span><span class="p">[]</span> <span class="n">data</span> <span class="p">=</span> <span class="p">{</span> <span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">4</span><span class="p">,</span> <span class="m">5</span><span class="p">,</span> <span class="m">6</span><span class="p">,</span> <span class="m">7</span><span class="p">,</span> <span class="m">8</span><span class="p">,</span> <span class="m">9</span> <span class="p">};</span>
+        <span class="kt">int</span><span class="p">[]</span> <span class="n">output</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">[</span><span class="m">10</span><span class="n">_000</span><span class="p">];</span>
+            
+        <span class="c1">//Load the action and execute</span>
+        <span class="n">Parallel</span><span class="p">.</span><span class="nf">For</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="n">output</span><span class="p">.</span><span class="n">Length</span><span class="p">,</span> 
+        <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="p">)</span> <span class="p">=&gt;</span>
+        <span class="p">{</span>
+            <span class="n">output</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span> <span class="p">%</span> <span class="n">data</span><span class="p">.</span><span class="n">Length</span><span class="p">];</span>
+        <span class="p">});</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Running the same program as a kernel is <strong>very</strong> similar:</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">ILGPU</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">ILGPU.Runtime</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">ILGPU.Runtime.CPU</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="nc">Program</span>
+<span class="p">{</span>
+    <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="c1">// Initialize ILGPU.</span>
+        <span class="n">Context</span> <span class="n">context</span> <span class="p">=</span> <span class="n">Context</span><span class="p">.</span><span class="nf">CreateDefault</span><span class="p">();</span>
+        <span class="n">Accelerator</span> <span class="n">accelerator</span> <span class="p">=</span> <span class="n">context</span><span class="p">.</span><span class="nf">CreateCPUAccelerator</span><span class="p">(</span><span class="m">0</span><span class="p">);</span>
+
+        <span class="c1">// Load the data.</span>
+        <span class="kt">var</span> <span class="n">deviceData</span> <span class="p">=</span> <span class="n">accelerator</span><span class="p">.</span><span class="nf">Allocate1D</span><span class="p">(</span><span class="k">new</span> <span class="kt">int</span><span class="p">[]</span> <span class="p">{</span> <span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">4</span><span class="p">,</span> <span class="m">5</span><span class="p">,</span> <span class="m">6</span><span class="p">,</span> <span class="m">7</span><span class="p">,</span> <span class="m">8</span><span class="p">,</span> <span class="m">9</span> <span class="p">});</span>
+        <span class="kt">var</span> <span class="n">deviceOutput</span> <span class="p">=</span> <span class="n">accelerator</span><span class="p">.</span><span class="n">Allocate1D</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;(</span><span class="m">10</span><span class="n">_000</span><span class="p">);</span>
+
+        <span class="c1">// load / compile the kernel</span>
+        <span class="kt">var</span> <span class="n">loadedKernel</span> <span class="p">=</span> <span class="n">accelerator</span><span class="p">.</span><span class="nf">LoadAutoGroupedStreamKernel</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">Index1D</span> <span class="n">i</span><span class="p">,</span> <span class="n">ArrayView</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">data</span><span class="p">,</span> <span class="n">ArrayView</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">output</span><span class="p">)</span> <span class="p">=&gt;</span>
+        <span class="p">{</span>
+            <span class="n">output</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span> <span class="p">%</span> <span class="n">data</span><span class="p">.</span><span class="n">Length</span><span class="p">];</span>
+        <span class="p">});</span>
+
+        <span class="c1">// tell the accelerator to start computing the kernel</span>
+        <span class="nf">loadedKernel</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span><span class="n">deviceOutput</span><span class="p">.</span><span class="n">Length</span><span class="p">,</span> <span class="n">deviceData</span><span class="p">.</span><span class="n">View</span><span class="p">,</span> <span class="n">deviceOutput</span><span class="p">.</span><span class="n">View</span><span class="p">);</span>
+
+        <span class="c1">// wait for the accelerator to be finished with whatever it's doing</span>
+        <span class="c1">// in this case it just waits for the kernel to finish.</span>
+        <span class="n">accelerator</span><span class="p">.</span><span class="nf">Synchronize</span><span class="p">();</span>
+
+        <span class="n">accelerator</span><span class="p">.</span><span class="nf">Dispose</span><span class="p">();</span>
+        <span class="n">context</span><span class="p">.</span><span class="nf">Dispose</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>You do not need to understand what is going on in the kernel example to see that the Parallel.For code uses the same
+API. The major differences are due to how memory is handled.</p>
+
+<p>Parallel.For and Kernels both have the same potential for race conditions, and for each you must take care to prevent
+them.</p>
+
+
+                
+    <div class="f5 contribution">
+        <h2>Help us make these docs great!</h2>
+        <p>All ILGPU docs are open source. See something that's wrong or unclear? Submit a
+            pull request.</p>
+        <a class="btn"
+           href="https://github.com/m4rs-mt/ILGPU/edit/master/Docs/01_Primers/02_A-GPU-Is-Not-A-CPU.md"
+           target="_blank" rel="noopener">
+            <svg aria-hidden="true" role="img" class="octicon mr-1" viewBox="0 0 16 16" width="16" height="16"
+                 fill="currentColor"
+                 style="display:inline-block;user-select:none;vertical-align:text-bottom;overflow:visible">
+                <path fill-rule="evenodd"
+                      d="M7.177 3.073L9.573.677A.25.25 0 0110 .854v4.792a.25.25 0 01-.427.177L7.177 3.427a.25.25 0 010-.354zM3.75 2.5a.75.75 0 100 1.5.75.75 0 000-1.5zm-2.25.75a2.25 2.25 0 113 2.122v5.256a2.251 2.251 0 11-1.5 0V5.372A2.25 2.25 0 011.5 3.25zM11 2.5h-1V4h1a1 1 0 011 1v5.628a2.251 2.251 0 101.5 0V5A2.5 2.5 0 0011 2.5zm1 10.25a.75.75 0 111.5 0 .75.75 0 01-1.5 0zM3.75 12a.75.75 0 100 1.5.75.75 0 000-1.5z"></path>
+            </svg>
+            Make a contribution</a>
+        <p class="color-fg-muted f6 mt-2">Or,<!-- --> <a
+                    href="https://github.com/m4rs-mt/ILGPU#general-contribution-guidelines"
+                    target="_blank" rel="noopener">learn how to contribute.</a>
+        </p>
+    </div>
+
+
+            </div>
+        </section><!-- End Inner Page Section -->
+    
+</main><!-- End #main -->
+<!-- ======= Footer ======= -->
+<footer id="footer">
+    <div class="container footer-bottom clearfix text-center">
+        <div>
+            &copy; Copyright
+            <script type="text/javascript">document.write(String(new Date().getFullYear()));</script>
+            <strong><span>ILGPU</span></strong>. All Rights Reserved.
+        </div>
+        
+        
+        
+    </div>
+</footer><!-- End Footer -->
+
+<div id="preloader"></div>
+<!-- loading Spinner -->
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center">
+    <i class="bi bi-arrow-up-short"></i>
+</a>
+<!-- Go to Top button -->
+
+<!-- ARSHA Vendor JS Files -->
+<script defer src="/assets/vendor/aos/aos.js"></script>
+<script defer src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script defer src="/assets/vendor/glightbox/js/glightbox.min.js"></script>
+<script defer src="/assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+<script defer src="/assets/vendor/swiper/swiper-bundle.min.js"></script>
+<script defer src="/assets/vendor/waypoints/noframework.waypoints.js"></script>
+<script defer src="/assets/vendor/php-email-form/validate.js"></script>
+<!-- ARSHA Vendor JS Files -->
+
+<!-- ARSHA Template Main JS File -->
+<script defer src="/assets/js/main.js"></script>
+<!-- ARSHA Template Main JS File -->
+
+    <!-- Dark Theme -->
+
+<!-- Dark Theme -->
+
+<!-- Search Feature -->
+
+    <script defer src="/assets/vendor/jquery/jquery-3.6.0.min.js"></script>
+    <script defer src="/assets/vendor/typeahead/typeahead.bundle.js"></script>
+    <script defer src="/assets/vendor/lunr/lunr.js"></script>
+    <script defer src="/assets/js/search.js"></script>
+    <script defer src="/assets/js/sidebar-collapse.js"></script>
+
+<!-- Search Feature -->
+
+<!-- Code Highlighting -->
+<script defer src="/assets/vendor/highlight/highlight.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        hljs.highlightAll();
+    })
+</script>
+<script defer src="/assets/vendor/prism/prism.js"></script>
+<!-- Code Highlighting -->
+
+
+
+
+
+</body>
+
+</html>

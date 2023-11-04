@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Memory &amp; Bandwidth Threads | ILGPU - A Modern GPU Compiler for .Net Programs</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="Memory &amp; Bandwidth Threads" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Primer 02: Memory" />
+<meta property="og:description" content="Primer 02: Memory" />
+<link rel="canonical" href="http://localhost:4000/docs/01-primers/03-memory-and-bandwidth-threads/" />
+<meta property="og:url" content="http://localhost:4000/docs/01-primers/03-memory-and-bandwidth-threads/" />
+<meta property="og:site_name" content="ILGPU - A Modern GPU Compiler for .Net Programs" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-08-18T23:46:02-04:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Memory &amp; Bandwidth Threads" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2023-08-18T23:46:02-04:00","datePublished":"2023-08-18T23:46:02-04:00","description":"Primer 02: Memory","headline":"Memory &amp; Bandwidth Threads","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/docs/01-primers/03-memory-and-bandwidth-threads/"},"url":"http://localhost:4000/docs/01-primers/03-memory-and-bandwidth-threads/"}</script>
+<!-- End Jekyll SEO tag -->
+<!-- ARSHA Fonts -->
+    <link href="/assets/css/fonts.css" rel="stylesheet">
+    <!-- ARSHA Fonts -->
+
+    <!-- ARSHA Vendor CSS Files -->
+    <link href="/assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <!-- ARSHA Vendor CSS Files -->
+
+    <!-- Normalize CSS -->
+    <link rel="stylesheet" href="/assets/css/normalize.css">
+    <!-- Normalize CSS -->
+
+    <!-- ARSHA Template Main CSS File -->
+    <link rel="stylesheet"
+          href="/assets/css/sass.css">
+    <!-- ARSHA Template Main CSS File -->
+
+    <!-- custom CSS Files -->
+    <link rel="stylesheet" href="/assets/css/custom.css">
+    <!-- custom CSS Files --><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="ILGPU - A Modern GPU Compiler for .Net Programs" /><!-- Favicons -->
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon/favicon-16x16.png">
+<link rel="manifest" href="/assets/img/favicon/site.webmanifest">
+<link rel="mask-icon" href="/assets/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+<link rel="shortcut icon" href="/assets/img/favicon/favicon.ico">
+<meta name="msapplication-TileColor" content="#2b5797">
+<meta name="msapplication-config" content="/assets/img/favicon/browserconfig.xml">
+<meta name="theme-color" content="#ffffff">
+<!-- Favicons -->
+
+<!-- Extras CSS -->
+<link rel="stylesheet" href="/assets/css/site.css">
+<!-- Extras CSS -->
+
+        <!-- Code Highlighting -->
+<link rel="stylesheet" href="/assets/vendor/prism/prism.css">
+<!-- Code Highlighting -->
+
+<!-- Extras CSS -->
+<link rel="stylesheet" href="/assets/css/doc.css">
+
+<!-- Extras CSS -->
+
+    
+
+    
+
+</head>
+
+
+<body>
+
+
+
+
+
+
+
+
+
+
+
+<header id="header" class="fixed-top">
+    <div class="container d-flex align-items-center">
+
+        <a href="/" class="logo me-auto"></a>
+
+        <nav id="navbar" class="navbar">
+            <ul>
+                <li class="dropdown">
+                    <a href="#" class=""><span>About</span> <i
+                                class="bi bi-chevron-down"></i></a>
+                    <ul>
+                        <li><a href="/#learn-more" class="scrollto">Learn More</a></li>
+                        <li><a href="/#highlights" class="scrollto">Highlights</a></li>
+                        <li><a href="/#features" class="scrollto">Features</a></li>
+                        <li><a href="/#news" class="scrollto">News</a></li>
+                        <li><a href="/#faq" class="scrollto">FAQ</a></li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#"
+                       class=""><span>Project</span>
+                        <i class="bi bi-chevron-down"></i></a>
+                    <ul>
+                        <li><a target="_blank" href="https://github.com/m4rs-mt/ILGPU">Sourcecode</a></li>
+                        <li><a href="/releases/">Releases</a></li>
+                        <li><a href="/milestones/">Milestones</a></li>
+                    </ul>
+                </li>
+
+                <li><a class="nav-link active"
+                       href="/docs/">Documentation</a></li>
+                <li><a class="nav-link" target="_blank" href="https://discord.com/invite/X6RBCff">Discord</a></li>
+                <li><a class="getstarted scrollto" href="/#cta">Get Started</a></li>
+            </ul>
+            <i class="bi bi-list mobile-nav-toggle"></i>
+        </nav>
+    </div>
+</header><!-- End Header -->
+
+
+
+<!-- ======= Sidebar Section ======= -->
+<section id="sidebar">
+    <div id="sidebar-header">
+        
+        
+            <div class="container">
+                <div class="row">
+                    <a href="/docs/" class="col-9 my-auto"><h4 class="mb-0">Documentation</h4></a>
+                    <svg xmlns="http://www.w3.org/2000/svg" id="sidebar-collapse-icon" class="icon icon-tabler icon-tabler-chevron-left text-white col-3 my-auto" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M15 6l-6 6l6 6"></path>
+                    </svg>
+                </div>
+            </div>
+        
+    </div>
+
+    
+        <div id="search" class="ms-4 mb-4">
+            <input type="search" class="typeahead form-control" placeholder="Search..." aria-label="Search" size="18" />
+        </div>
+    
+
+    <nav id="wiki-nav">
+        
+        
+            <div class="section">
+                <h5>Primers</h5>
+                <ul>
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/01-primers/01-setting-up-ilgpu/"
+                                   >Setting Up ILGPU</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/01-primers/02-a-gpu-is-not-a-cpu/"
+                                   >A GPU Is Not A CPU</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/01-primers/03-memory-and-bandwidth-threads/"
+                                   class="text-white">Memory & Bandwidth Threads</a></li>
+                        
+                    
+                </ul>
+            </div>
+        
+            <div class="section">
+                <h5>Beginner</h5>
+                <ul>
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/02-beginner/01-context-and-accelerators/"
+                                   >Context & Accelerators</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/02-beginner/02-memorybuffers-and-arrayviews/"
+                                   >MemoryBuffers & ArrayViews</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/02-beginner/03-kernels-and-simple-programs/"
+                                   >Kernels & Simple Programs</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/02-beginner/04-structs/"
+                                   >Structs</a></li>
+                        
+                    
+                </ul>
+            </div>
+        
+            <div class="section">
+                <h5>Advanced</h5>
+                <ul>
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/03-advanced/01-memory-buffers-and-views/"
+                                   >Memory Buffers & Views</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/03-advanced/02-kernels/"
+                                   >Kernels</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/03-advanced/03-shared-memory/"
+                                   >Shared Memory</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/03-advanced/04-math-functions/"
+                                   >Math Functions</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/03-advanced/05-dynamically-specialized-kernels/"
+                                   >Dynamically Specialized Kernels</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/03-advanced/06-debugging-and-profiling/"
+                                   >Debugging & Profiling</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/03-advanced/07-inside-ilgpu/"
+                                   >Inside ILGPU</a></li>
+                        
+                    
+                </ul>
+            </div>
+        
+            <div class="section">
+                <h5>Upgrade Guides</h5>
+                <ul>
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/04-upgrade-guides/01-v0-8-x-to-v0-9-x/"
+                                   >v0.8.X to v0.9.X</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/04-upgrade-guides/02-v0-8-0-to-v0-8-1/"
+                                   >v0.8.0 to v0.8.1</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/04-upgrade-guides/03-v0-7-x-to-v0-8-x/"
+                                   >v0.7.X to v0.8.X</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/04-upgrade-guides/04-v0-6-x-to-v0-7-x/"
+                                   >v0.6.X to v0.7.X</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/04-upgrade-guides/05-v0-3-x-to-v0-5-x/"
+                                   >v0.3.X to v0.5.X</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/04-upgrade-guides/06-v0-1-x-to-v0-2-x/"
+                                   >v0.1.X to v0.2.X</a></li>
+                        
+                    
+                </ul>
+            </div>
+        
+        <ul>
+            
+        </ul>
+    </nav>
+
+    
+</section><!-- End Sidebar Section -->
+
+
+<main id="main">
+    
+
+
+<!-- ======= Breadcrumbs ======= -->
+<section id="breadcrumbs" class="breadcrumbs">
+    <div class="container">
+        <ol>
+            <li><a href="/">Home</a></li>
+            <li>Memory & Bandwidth Threads</li>
+        </ol>
+        <h2>Memory & Bandwidth Threads</h2>
+    </div>
+</section><!-- End Breadcrumbs -->
+
+
+    
+        <!-- ======= Inner Page Section ======= -->
+        <section id="wiki-main" class="inner-page collapsed">
+            <div class="container-fluid">
+                <h1 id="primer-02-memory">Primer 02: Memory</h1>
+
+<p>The following is my understanding of the performance quirks with GPUs due to memory and cache and coalescent memory
+access.
+Just like with Primer 01, if you have a decent understanding of CUDA or OpenCL you can skip this.</p>
+
+<p>Ok, buckle up.</p>
+
+<h2 id="memory-and-bandwidth-and-threads-oh-my">Memory and bandwidth and threads. Oh my!</h2>
+
+<h3 id="computers-need-memory-and-memory-is-slow0-like-really-slow">Computers need memory, and memory is slow<sup>0</sup>. (Like, really slow)</h3>
+
+<p>Back in the day (I assume, the first computer I remember using had DDR-200) computer memory
+was FAST. Most of the time the limiting factor was the CPU, though correctly timing video output was also
+a driving force. As an example, the C64 ran the memory at 2x the CPU frequency so the VIC-II
+graphics chip could share the CPU memory by stealing half the cycles. In the almost 40 years since the C64, humanity
+has gotten much better at making silicon and precious metals do our bidding. Feeding
+data into the CPU from memory has become the slow part. Memory is slow.</p>
+
+<p>Why is memory slow? To be honest, it seems to me that it’s caused by two things:</p>
+
+<ol>
+  <li>Physics<br />
+Programmers like to think of computers as an abstract thing, a platonic ideal.
+But here in the real world there are no spherical cows, no free lunch. Memory values are ACTUAL
+ELECTRONS traveling through silicon and precious metals.</li>
+</ol>
+
+<p>In general, the farther from the thing doing the math the ACTUAL ELECTRONS are the slower it is
+to access.</p>
+
+<ol>
+  <li>We <del>need</del> want a lot of memory.<br />
+We can make memory that is almost as fast as our processors, but it must literally be directly made into the
+processor cores in silicon.
+Not only is this is very expensive, the more memory in silicon the less room for processor stuff.</li>
+</ol>
+
+<h3 id="how-do-processors-deal-with-slow-memory">How do processors deal with slow memory?</h3>
+
+<p>This leads to an optimization problem. Modern processor designers use a complex system of tiered
+memory consisting of several layers of small, fast, on-die memory and large, slow, distant, off-die memory.</p>
+
+<p>A processor can also perform a few tricks to help us deal with the fact that memory is slow.
+One example is prefetching. If a program uses memory at location X it probably will use the
+memory at location X+1 therefore the processor <em>prefetchs</em> a whole chunk of memory and puts it in
+the cache, closer to the processor. This way if you do need the memory at X+1 it is already in cache.</p>
+
+<p>I am getting off topic. For a more detailed explanation, see this thing I found
+on <a href="https://formulusblack.com/blog/compute-performance-distance-of-data-as-a-measure-of-latency/">google</a>.</p>
+
+<h1 id="what-does-this-mean-for-ilgpu">What does this mean for ILGPU?</h1>
+
+<h4 id="gpus-have-memory-and-memory-is-slow">GPU’s have memory, and memory is slow.</h4>
+
+<p>GPUs on paper have TONS of memory bandwidth, my GPU has around 10x the memory bandwidth my CPU does. Right? Yeah…</p>
+
+<h6 id="kinda">Kinda</h6>
+
+<p>If we go back into spherical cow territory and ignore a ton of important details, we can illustrate an
+important quirk in GPU design that directly impacts performance.</p>
+
+<p>My CPU, a Ryzen 5 3600 with dual channel DDR4, gets around 34 GB/s of memory bandwidth. The GDDR6 in my GPU, a RTX 2060,
+gets around 336 GB/s of memory bandwidth.</p>
+
+<p>But lets compare bandwidth per thread.</p>
+
+<p>CPU: Ryzen 5 3600 34 GB/s / 12 threads = 2.83 GB/s per thread</p>
+
+<p>GPU: RTX 2060 336 GB/s / (30 SM’s * 512 threads<sup>1</sup>) = 0.0218 GB/s or just <em>22.4 MB/s per thread</em></p>
+
+<h4 id="so-what">So what?</h4>
+
+<p>In the end computers need memory because programs need memory. There are a few things I think about as I program that I
+think help:</p>
+
+<ol>
+  <li>If your code scans through memory linearly the GPU can optimize it by prefetching the data. This leads to the “struct
+of arrays”
+approach, more on that in the structs tutorial.</li>
+  <li>GPUs take prefetching to the next level by having coalescent memory access, which I need a more in depth explanation
+of, but
+basically if threads are accessing memory in a linear way that the GPU can detect, it can send one memory access for
+the whole chunk
+of threads.</li>
+</ol>
+
+<p>Again, this all boils down to the very simple notion that memory is slow, and it gets slower the farther it gets from
+the processor.</p>
+
+<blockquote>
+  <p><sup>0</sup>
+This is obviously a complex topic. In general, modern memory bandwidth has a speed, and a latency problem. They
+are different, but in subtle ways. If you are interested in this I would do some more research, I am just
+some random dude on the internet.</p>
+</blockquote>
+
+<blockquote>
+  <p><sup>1</sup>
+I thought this would be simple, but after double checking, I found that the question “How many threads can a GPU run
+at once?”
+is a hard question and also the wrong question to answer. According to the cuda manual, at maximum an SM (Streaming
+Multiprocessor) can
+have 16 warps executing simultaneously and 32 threads per warp so it can issue at minimum 512 memory accesses per
+cycle. You may have more warps scheduled due to memory / instruction latency but a minimum estimate will do. This
+still provides a good
+illustration for how little memory bandwidth you have per thread. We will get into more detail in a
+grouping tutorial.</p>
+</blockquote>
+
+
+                
+    <div class="f5 contribution">
+        <h2>Help us make these docs great!</h2>
+        <p>All ILGPU docs are open source. See something that's wrong or unclear? Submit a
+            pull request.</p>
+        <a class="btn"
+           href="https://github.com/m4rs-mt/ILGPU/edit/master/Docs/01_Primers/03_Memory-and-Bandwidth-Threads.md"
+           target="_blank" rel="noopener">
+            <svg aria-hidden="true" role="img" class="octicon mr-1" viewBox="0 0 16 16" width="16" height="16"
+                 fill="currentColor"
+                 style="display:inline-block;user-select:none;vertical-align:text-bottom;overflow:visible">
+                <path fill-rule="evenodd"
+                      d="M7.177 3.073L9.573.677A.25.25 0 0110 .854v4.792a.25.25 0 01-.427.177L7.177 3.427a.25.25 0 010-.354zM3.75 2.5a.75.75 0 100 1.5.75.75 0 000-1.5zm-2.25.75a2.25 2.25 0 113 2.122v5.256a2.251 2.251 0 11-1.5 0V5.372A2.25 2.25 0 011.5 3.25zM11 2.5h-1V4h1a1 1 0 011 1v5.628a2.251 2.251 0 101.5 0V5A2.5 2.5 0 0011 2.5zm1 10.25a.75.75 0 111.5 0 .75.75 0 01-1.5 0zM3.75 12a.75.75 0 100 1.5.75.75 0 000-1.5z"></path>
+            </svg>
+            Make a contribution</a>
+        <p class="color-fg-muted f6 mt-2">Or,<!-- --> <a
+                    href="https://github.com/m4rs-mt/ILGPU#general-contribution-guidelines"
+                    target="_blank" rel="noopener">learn how to contribute.</a>
+        </p>
+    </div>
+
+
+            </div>
+        </section><!-- End Inner Page Section -->
+    
+</main><!-- End #main -->
+<!-- ======= Footer ======= -->
+<footer id="footer">
+    <div class="container footer-bottom clearfix text-center">
+        <div>
+            &copy; Copyright
+            <script type="text/javascript">document.write(String(new Date().getFullYear()));</script>
+            <strong><span>ILGPU</span></strong>. All Rights Reserved.
+        </div>
+        
+        
+        
+    </div>
+</footer><!-- End Footer -->
+
+<div id="preloader"></div>
+<!-- loading Spinner -->
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center">
+    <i class="bi bi-arrow-up-short"></i>
+</a>
+<!-- Go to Top button -->
+
+<!-- ARSHA Vendor JS Files -->
+<script defer src="/assets/vendor/aos/aos.js"></script>
+<script defer src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script defer src="/assets/vendor/glightbox/js/glightbox.min.js"></script>
+<script defer src="/assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+<script defer src="/assets/vendor/swiper/swiper-bundle.min.js"></script>
+<script defer src="/assets/vendor/waypoints/noframework.waypoints.js"></script>
+<script defer src="/assets/vendor/php-email-form/validate.js"></script>
+<!-- ARSHA Vendor JS Files -->
+
+<!-- ARSHA Template Main JS File -->
+<script defer src="/assets/js/main.js"></script>
+<!-- ARSHA Template Main JS File -->
+
+    <!-- Dark Theme -->
+
+<!-- Dark Theme -->
+
+<!-- Search Feature -->
+
+    <script defer src="/assets/vendor/jquery/jquery-3.6.0.min.js"></script>
+    <script defer src="/assets/vendor/typeahead/typeahead.bundle.js"></script>
+    <script defer src="/assets/vendor/lunr/lunr.js"></script>
+    <script defer src="/assets/js/search.js"></script>
+    <script defer src="/assets/js/sidebar-collapse.js"></script>
+
+<!-- Search Feature -->
+
+<!-- Code Highlighting -->
+<script defer src="/assets/vendor/highlight/highlight.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        hljs.highlightAll();
+    })
+</script>
+<script defer src="/assets/vendor/prism/prism.js"></script>
+<!-- Code Highlighting -->
+
+
+
+
+
+</body>
+
+</html>

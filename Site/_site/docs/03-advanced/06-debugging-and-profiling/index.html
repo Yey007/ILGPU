@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Debugging &amp; Profiling | ILGPU - A Modern GPU Compiler for .Net Programs</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="Debugging &amp; Profiling" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="The best debugging experience can be achieved with the CPUAccelerator. Debugging with the software emulation layer is very convenient due to the very good properties of the .Net debugging environments. Currently, detailed kernel debugging is only possible with the CPU accelerator. However, we are currently extending the debugging capabilities to also emulate different GPUs in order to test your algorithms with “virtual GPU devices” without needing to have direct access to the actual GPU devices (more information about this feature can be found here." />
+<meta property="og:description" content="The best debugging experience can be achieved with the CPUAccelerator. Debugging with the software emulation layer is very convenient due to the very good properties of the .Net debugging environments. Currently, detailed kernel debugging is only possible with the CPU accelerator. However, we are currently extending the debugging capabilities to also emulate different GPUs in order to test your algorithms with “virtual GPU devices” without needing to have direct access to the actual GPU devices (more information about this feature can be found here." />
+<link rel="canonical" href="http://localhost:4000/docs/03-advanced/06-debugging-and-profiling/" />
+<meta property="og:url" content="http://localhost:4000/docs/03-advanced/06-debugging-and-profiling/" />
+<meta property="og:site_name" content="ILGPU - A Modern GPU Compiler for .Net Programs" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-08-18T23:46:02-04:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Debugging &amp; Profiling" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2023-08-18T23:46:02-04:00","datePublished":"2023-08-18T23:46:02-04:00","description":"The best debugging experience can be achieved with the CPUAccelerator. Debugging with the software emulation layer is very convenient due to the very good properties of the .Net debugging environments. Currently, detailed kernel debugging is only possible with the CPU accelerator. However, we are currently extending the debugging capabilities to also emulate different GPUs in order to test your algorithms with “virtual GPU devices” without needing to have direct access to the actual GPU devices (more information about this feature can be found here.","headline":"Debugging &amp; Profiling","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/docs/03-advanced/06-debugging-and-profiling/"},"url":"http://localhost:4000/docs/03-advanced/06-debugging-and-profiling/"}</script>
+<!-- End Jekyll SEO tag -->
+<!-- ARSHA Fonts -->
+    <link href="/assets/css/fonts.css" rel="stylesheet">
+    <!-- ARSHA Fonts -->
+
+    <!-- ARSHA Vendor CSS Files -->
+    <link href="/assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <!-- ARSHA Vendor CSS Files -->
+
+    <!-- Normalize CSS -->
+    <link rel="stylesheet" href="/assets/css/normalize.css">
+    <!-- Normalize CSS -->
+
+    <!-- ARSHA Template Main CSS File -->
+    <link rel="stylesheet"
+          href="/assets/css/sass.css">
+    <!-- ARSHA Template Main CSS File -->
+
+    <!-- custom CSS Files -->
+    <link rel="stylesheet" href="/assets/css/custom.css">
+    <!-- custom CSS Files --><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="ILGPU - A Modern GPU Compiler for .Net Programs" /><!-- Favicons -->
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon/favicon-16x16.png">
+<link rel="manifest" href="/assets/img/favicon/site.webmanifest">
+<link rel="mask-icon" href="/assets/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+<link rel="shortcut icon" href="/assets/img/favicon/favicon.ico">
+<meta name="msapplication-TileColor" content="#2b5797">
+<meta name="msapplication-config" content="/assets/img/favicon/browserconfig.xml">
+<meta name="theme-color" content="#ffffff">
+<!-- Favicons -->
+
+<!-- Extras CSS -->
+<link rel="stylesheet" href="/assets/css/site.css">
+<!-- Extras CSS -->
+
+        <!-- Code Highlighting -->
+<link rel="stylesheet" href="/assets/vendor/prism/prism.css">
+<!-- Code Highlighting -->
+
+<!-- Extras CSS -->
+<link rel="stylesheet" href="/assets/css/doc.css">
+
+<!-- Extras CSS -->
+
+    
+
+    
+
+</head>
+
+
+<body>
+
+
+
+
+
+
+
+
+
+
+
+<header id="header" class="fixed-top">
+    <div class="container d-flex align-items-center">
+
+        <a href="/" class="logo me-auto"></a>
+
+        <nav id="navbar" class="navbar">
+            <ul>
+                <li class="dropdown">
+                    <a href="#" class=""><span>About</span> <i
+                                class="bi bi-chevron-down"></i></a>
+                    <ul>
+                        <li><a href="/#learn-more" class="scrollto">Learn More</a></li>
+                        <li><a href="/#highlights" class="scrollto">Highlights</a></li>
+                        <li><a href="/#features" class="scrollto">Features</a></li>
+                        <li><a href="/#news" class="scrollto">News</a></li>
+                        <li><a href="/#faq" class="scrollto">FAQ</a></li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#"
+                       class=""><span>Project</span>
+                        <i class="bi bi-chevron-down"></i></a>
+                    <ul>
+                        <li><a target="_blank" href="https://github.com/m4rs-mt/ILGPU">Sourcecode</a></li>
+                        <li><a href="/releases/">Releases</a></li>
+                        <li><a href="/milestones/">Milestones</a></li>
+                    </ul>
+                </li>
+
+                <li><a class="nav-link active"
+                       href="/docs/">Documentation</a></li>
+                <li><a class="nav-link" target="_blank" href="https://discord.com/invite/X6RBCff">Discord</a></li>
+                <li><a class="getstarted scrollto" href="/#cta">Get Started</a></li>
+            </ul>
+            <i class="bi bi-list mobile-nav-toggle"></i>
+        </nav>
+    </div>
+</header><!-- End Header -->
+
+
+
+<!-- ======= Sidebar Section ======= -->
+<section id="sidebar">
+    <div id="sidebar-header">
+        
+        
+            <div class="container">
+                <div class="row">
+                    <a href="/docs/" class="col-9 my-auto"><h4 class="mb-0">Documentation</h4></a>
+                    <svg xmlns="http://www.w3.org/2000/svg" id="sidebar-collapse-icon" class="icon icon-tabler icon-tabler-chevron-left text-white col-3 my-auto" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M15 6l-6 6l6 6"></path>
+                    </svg>
+                </div>
+            </div>
+        
+    </div>
+
+    
+        <div id="search" class="ms-4 mb-4">
+            <input type="search" class="typeahead form-control" placeholder="Search..." aria-label="Search" size="18" />
+        </div>
+    
+
+    <nav id="wiki-nav">
+        
+        
+            <div class="section">
+                <h5>Primers</h5>
+                <ul>
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/01-primers/01-setting-up-ilgpu/"
+                                   >Setting Up ILGPU</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/01-primers/02-a-gpu-is-not-a-cpu/"
+                                   >A GPU Is Not A CPU</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/01-primers/03-memory-and-bandwidth-threads/"
+                                   >Memory & Bandwidth Threads</a></li>
+                        
+                    
+                </ul>
+            </div>
+        
+            <div class="section">
+                <h5>Beginner</h5>
+                <ul>
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/02-beginner/01-context-and-accelerators/"
+                                   >Context & Accelerators</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/02-beginner/02-memorybuffers-and-arrayviews/"
+                                   >MemoryBuffers & ArrayViews</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/02-beginner/03-kernels-and-simple-programs/"
+                                   >Kernels & Simple Programs</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/02-beginner/04-structs/"
+                                   >Structs</a></li>
+                        
+                    
+                </ul>
+            </div>
+        
+            <div class="section">
+                <h5>Advanced</h5>
+                <ul>
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/03-advanced/01-memory-buffers-and-views/"
+                                   >Memory Buffers & Views</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/03-advanced/02-kernels/"
+                                   >Kernels</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/03-advanced/03-shared-memory/"
+                                   >Shared Memory</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/03-advanced/04-math-functions/"
+                                   >Math Functions</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/03-advanced/05-dynamically-specialized-kernels/"
+                                   >Dynamically Specialized Kernels</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/03-advanced/06-debugging-and-profiling/"
+                                   class="text-white">Debugging & Profiling</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/03-advanced/07-inside-ilgpu/"
+                                   >Inside ILGPU</a></li>
+                        
+                    
+                </ul>
+            </div>
+        
+            <div class="section">
+                <h5>Upgrade Guides</h5>
+                <ul>
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/04-upgrade-guides/01-v0-8-x-to-v0-9-x/"
+                                   >v0.8.X to v0.9.X</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/04-upgrade-guides/02-v0-8-0-to-v0-8-1/"
+                                   >v0.8.0 to v0.8.1</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/04-upgrade-guides/03-v0-7-x-to-v0-8-x/"
+                                   >v0.7.X to v0.8.X</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/04-upgrade-guides/04-v0-6-x-to-v0-7-x/"
+                                   >v0.6.X to v0.7.X</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/04-upgrade-guides/05-v0-3-x-to-v0-5-x/"
+                                   >v0.3.X to v0.5.X</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/04-upgrade-guides/06-v0-1-x-to-v0-2-x/"
+                                   >v0.1.X to v0.2.X</a></li>
+                        
+                    
+                </ul>
+            </div>
+        
+        <ul>
+            
+        </ul>
+    </nav>
+
+    
+</section><!-- End Sidebar Section -->
+
+
+<main id="main">
+    
+
+
+<!-- ======= Breadcrumbs ======= -->
+<section id="breadcrumbs" class="breadcrumbs">
+    <div class="container">
+        <ol>
+            <li><a href="/">Home</a></li>
+            <li>Debugging & Profiling</li>
+        </ol>
+        <h2>Debugging & Profiling</h2>
+    </div>
+</section><!-- End Breadcrumbs -->
+
+
+    
+        <!-- ======= Inner Page Section ======= -->
+        <section id="wiki-main" class="inner-page collapsed">
+            <div class="container-fluid">
+                <p>The best debugging experience can be achieved with the <code class="language-plaintext highlighter-rouge">CPUAccelerator</code>.
+Debugging with the software emulation layer is very convenient due to the very good properties of the .Net debugging
+environments.
+Currently, detailed kernel debugging is only possible with the CPU accelerator.
+However, we are currently extending the debugging capabilities to also emulate different GPUs in order to test your
+algorithms with “virtual GPU devices” without needing to have direct access to the actual GPU devices (more information
+about this feature can be found <a href="https://github.com/m4rs-mt/ILGPU/pull/402">here</a>.</p>
+
+<p>Assertions on GPU hardware devices can be enabled using the <code class="language-plaintext highlighter-rouge">Assertions()</code> method of <code class="language-plaintext highlighter-rouge">Context.Builder</code> (disabled by
+default when a <code class="language-plaintext highlighter-rouge">Debugger</code> is not attached to the application).
+Note that enabling assertions using this flag will cause them to be enabled in <code class="language-plaintext highlighter-rouge">Release</code> builds as well.
+Be sure to disable this flag if you want to get the best runtime performance.</p>
+
+<p>Source-line based debugging information can be turned on via the <code class="language-plaintext highlighter-rouge">DebugSymbols()</code> method of <code class="language-plaintext highlighter-rouge">Context.Builder</code> (disabled
+by default).
+Note that only the new portable PBD format is supported.
+Enabling debug information is essential to identify problems and catch break points on GPU hardware.
+It is also very useful for kernel profiling as you can link the profiling insights to your source lines.
+You may want to disable inlining via <code class="language-plaintext highlighter-rouge">Inlining()</code> to significantly increase the accuracy of your debugging information
+at the expense cost of runtime performance.</p>
+
+<p><em>Note that the inspection of variables, registers, and global memory on GPU hardware is currently not supported.</em></p>
+
+<h2 id="named-kernels">Named Kernels</h2>
+
+<p>PR <a href="https://github.com/m4rs-mt/ILGPU/pull/401">#401</a> added support for using either the .Net function name or a custom
+name as the entry point for each Cuda/OpenCL kernel. This simplifies profiling and debugging because multiple kernels
+then have different names.</p>
+
+<p><em>Note that custom kernel names have to consist of ASCII characters only. Other characters will be automatically mapped
+to ‘_’ in the assembly code.</em></p>
+
+<h2 id="printf-like-debugging">PrintF-Like Debugging</h2>
+
+<p>Cuda and OpenCL provide the ability to print/output basic values into the console output stream for debugging. This is
+especially useful for device-specific concurrency problems that need to be analyzed without changing environment
+settings. Starting with <a href="https://github.com/m4rs-mt/ILGPU/releases/tag/v0.10.0">v0.10.0</a>, ILGPU provides platform
+independent support for <code class="language-plaintext highlighter-rouge">Interop.Write</code> and <code class="language-plaintext highlighter-rouge">Interop.WriteLine</code> that accept (very) basic .Net-like format specifiers of
+the form <code class="language-plaintext highlighter-rouge">Test output {0} and test output {1}</code>.</p>
+
+<p>This string can be formatted to <code class="language-plaintext highlighter-rouge">Test output 1.0 and test output -45</code> using:</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Interop</span><span class="p">.</span><span class="nf">Write</span><span class="p">(</span><span class="s">"Test output {0} and test output {1}"</span><span class="p">,</span> <span class="m">1.0</span><span class="p">,</span> <span class="p">-</span><span class="m">45</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>Note that this functionality is enabled by default when a <code class="language-plaintext highlighter-rouge">Debugger</code> is attached to the application. For this to work
+without the Debugger, or in Release mode, call the <code class="language-plaintext highlighter-rouge">.IOOperations()</code> method of <code class="language-plaintext highlighter-rouge">Context.Builder</code>. Be sure to remove this
+flag if you want to get the best runtime performance.</p>
+
+
+                
+    <div class="f5 contribution">
+        <h2>Help us make these docs great!</h2>
+        <p>All ILGPU docs are open source. See something that's wrong or unclear? Submit a
+            pull request.</p>
+        <a class="btn"
+           href="https://github.com/m4rs-mt/ILGPU/edit/master/Docs/03_Advanced/06_Debugging-and-Profiling.md"
+           target="_blank" rel="noopener">
+            <svg aria-hidden="true" role="img" class="octicon mr-1" viewBox="0 0 16 16" width="16" height="16"
+                 fill="currentColor"
+                 style="display:inline-block;user-select:none;vertical-align:text-bottom;overflow:visible">
+                <path fill-rule="evenodd"
+                      d="M7.177 3.073L9.573.677A.25.25 0 0110 .854v4.792a.25.25 0 01-.427.177L7.177 3.427a.25.25 0 010-.354zM3.75 2.5a.75.75 0 100 1.5.75.75 0 000-1.5zm-2.25.75a2.25 2.25 0 113 2.122v5.256a2.251 2.251 0 11-1.5 0V5.372A2.25 2.25 0 011.5 3.25zM11 2.5h-1V4h1a1 1 0 011 1v5.628a2.251 2.251 0 101.5 0V5A2.5 2.5 0 0011 2.5zm1 10.25a.75.75 0 111.5 0 .75.75 0 01-1.5 0zM3.75 12a.75.75 0 100 1.5.75.75 0 000-1.5z"></path>
+            </svg>
+            Make a contribution</a>
+        <p class="color-fg-muted f6 mt-2">Or,<!-- --> <a
+                    href="https://github.com/m4rs-mt/ILGPU#general-contribution-guidelines"
+                    target="_blank" rel="noopener">learn how to contribute.</a>
+        </p>
+    </div>
+
+
+            </div>
+        </section><!-- End Inner Page Section -->
+    
+</main><!-- End #main -->
+<!-- ======= Footer ======= -->
+<footer id="footer">
+    <div class="container footer-bottom clearfix text-center">
+        <div>
+            &copy; Copyright
+            <script type="text/javascript">document.write(String(new Date().getFullYear()));</script>
+            <strong><span>ILGPU</span></strong>. All Rights Reserved.
+        </div>
+        
+        
+        
+    </div>
+</footer><!-- End Footer -->
+
+<div id="preloader"></div>
+<!-- loading Spinner -->
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center">
+    <i class="bi bi-arrow-up-short"></i>
+</a>
+<!-- Go to Top button -->
+
+<!-- ARSHA Vendor JS Files -->
+<script defer src="/assets/vendor/aos/aos.js"></script>
+<script defer src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script defer src="/assets/vendor/glightbox/js/glightbox.min.js"></script>
+<script defer src="/assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+<script defer src="/assets/vendor/swiper/swiper-bundle.min.js"></script>
+<script defer src="/assets/vendor/waypoints/noframework.waypoints.js"></script>
+<script defer src="/assets/vendor/php-email-form/validate.js"></script>
+<!-- ARSHA Vendor JS Files -->
+
+<!-- ARSHA Template Main JS File -->
+<script defer src="/assets/js/main.js"></script>
+<!-- ARSHA Template Main JS File -->
+
+    <!-- Dark Theme -->
+
+<!-- Dark Theme -->
+
+<!-- Search Feature -->
+
+    <script defer src="/assets/vendor/jquery/jquery-3.6.0.min.js"></script>
+    <script defer src="/assets/vendor/typeahead/typeahead.bundle.js"></script>
+    <script defer src="/assets/vendor/lunr/lunr.js"></script>
+    <script defer src="/assets/js/search.js"></script>
+    <script defer src="/assets/js/sidebar-collapse.js"></script>
+
+<!-- Search Feature -->
+
+<!-- Code Highlighting -->
+<script defer src="/assets/vendor/highlight/highlight.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        hljs.highlightAll();
+    })
+</script>
+<script defer src="/assets/vendor/prism/prism.js"></script>
+<!-- Code Highlighting -->
+
+
+
+
+
+</body>
+
+</html>

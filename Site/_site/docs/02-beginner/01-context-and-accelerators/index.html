@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Context &amp; Accelerators | ILGPU - A Modern GPU Compiler for .Net Programs</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="Context &amp; Accelerators" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Tutorial 01 Context, Device, and Accelerators" />
+<meta property="og:description" content="Tutorial 01 Context, Device, and Accelerators" />
+<link rel="canonical" href="http://localhost:4000/docs/02-beginner/01-context-and-accelerators/" />
+<meta property="og:url" content="http://localhost:4000/docs/02-beginner/01-context-and-accelerators/" />
+<meta property="og:site_name" content="ILGPU - A Modern GPU Compiler for .Net Programs" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-08-18T23:46:02-04:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Context &amp; Accelerators" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2023-08-18T23:46:02-04:00","datePublished":"2023-08-18T23:46:02-04:00","description":"Tutorial 01 Context, Device, and Accelerators","headline":"Context &amp; Accelerators","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/docs/02-beginner/01-context-and-accelerators/"},"url":"http://localhost:4000/docs/02-beginner/01-context-and-accelerators/"}</script>
+<!-- End Jekyll SEO tag -->
+<!-- ARSHA Fonts -->
+    <link href="/assets/css/fonts.css" rel="stylesheet">
+    <!-- ARSHA Fonts -->
+
+    <!-- ARSHA Vendor CSS Files -->
+    <link href="/assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <!-- ARSHA Vendor CSS Files -->
+
+    <!-- Normalize CSS -->
+    <link rel="stylesheet" href="/assets/css/normalize.css">
+    <!-- Normalize CSS -->
+
+    <!-- ARSHA Template Main CSS File -->
+    <link rel="stylesheet"
+          href="/assets/css/sass.css">
+    <!-- ARSHA Template Main CSS File -->
+
+    <!-- custom CSS Files -->
+    <link rel="stylesheet" href="/assets/css/custom.css">
+    <!-- custom CSS Files --><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="ILGPU - A Modern GPU Compiler for .Net Programs" /><!-- Favicons -->
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon/favicon-16x16.png">
+<link rel="manifest" href="/assets/img/favicon/site.webmanifest">
+<link rel="mask-icon" href="/assets/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+<link rel="shortcut icon" href="/assets/img/favicon/favicon.ico">
+<meta name="msapplication-TileColor" content="#2b5797">
+<meta name="msapplication-config" content="/assets/img/favicon/browserconfig.xml">
+<meta name="theme-color" content="#ffffff">
+<!-- Favicons -->
+
+<!-- Extras CSS -->
+<link rel="stylesheet" href="/assets/css/site.css">
+<!-- Extras CSS -->
+
+        <!-- Code Highlighting -->
+<link rel="stylesheet" href="/assets/vendor/prism/prism.css">
+<!-- Code Highlighting -->
+
+<!-- Extras CSS -->
+<link rel="stylesheet" href="/assets/css/doc.css">
+
+<!-- Extras CSS -->
+
+    
+
+    
+
+</head>
+
+
+<body>
+
+
+
+
+
+
+
+
+
+
+
+<header id="header" class="fixed-top">
+    <div class="container d-flex align-items-center">
+
+        <a href="/" class="logo me-auto"></a>
+
+        <nav id="navbar" class="navbar">
+            <ul>
+                <li class="dropdown">
+                    <a href="#" class=""><span>About</span> <i
+                                class="bi bi-chevron-down"></i></a>
+                    <ul>
+                        <li><a href="/#learn-more" class="scrollto">Learn More</a></li>
+                        <li><a href="/#highlights" class="scrollto">Highlights</a></li>
+                        <li><a href="/#features" class="scrollto">Features</a></li>
+                        <li><a href="/#news" class="scrollto">News</a></li>
+                        <li><a href="/#faq" class="scrollto">FAQ</a></li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#"
+                       class=""><span>Project</span>
+                        <i class="bi bi-chevron-down"></i></a>
+                    <ul>
+                        <li><a target="_blank" href="https://github.com/m4rs-mt/ILGPU">Sourcecode</a></li>
+                        <li><a href="/releases/">Releases</a></li>
+                        <li><a href="/milestones/">Milestones</a></li>
+                    </ul>
+                </li>
+
+                <li><a class="nav-link active"
+                       href="/docs/">Documentation</a></li>
+                <li><a class="nav-link" target="_blank" href="https://discord.com/invite/X6RBCff">Discord</a></li>
+                <li><a class="getstarted scrollto" href="/#cta">Get Started</a></li>
+            </ul>
+            <i class="bi bi-list mobile-nav-toggle"></i>
+        </nav>
+    </div>
+</header><!-- End Header -->
+
+
+
+<!-- ======= Sidebar Section ======= -->
+<section id="sidebar">
+    <div id="sidebar-header">
+        
+        
+            <div class="container">
+                <div class="row">
+                    <a href="/docs/" class="col-9 my-auto"><h4 class="mb-0">Documentation</h4></a>
+                    <svg xmlns="http://www.w3.org/2000/svg" id="sidebar-collapse-icon" class="icon icon-tabler icon-tabler-chevron-left text-white col-3 my-auto" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M15 6l-6 6l6 6"></path>
+                    </svg>
+                </div>
+            </div>
+        
+    </div>
+
+    
+        <div id="search" class="ms-4 mb-4">
+            <input type="search" class="typeahead form-control" placeholder="Search..." aria-label="Search" size="18" />
+        </div>
+    
+
+    <nav id="wiki-nav">
+        
+        
+            <div class="section">
+                <h5>Primers</h5>
+                <ul>
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/01-primers/01-setting-up-ilgpu/"
+                                   >Setting Up ILGPU</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/01-primers/02-a-gpu-is-not-a-cpu/"
+                                   >A GPU Is Not A CPU</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/01-primers/03-memory-and-bandwidth-threads/"
+                                   >Memory & Bandwidth Threads</a></li>
+                        
+                    
+                </ul>
+            </div>
+        
+            <div class="section">
+                <h5>Beginner</h5>
+                <ul>
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/02-beginner/01-context-and-accelerators/"
+                                   class="text-white">Context & Accelerators</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/02-beginner/02-memorybuffers-and-arrayviews/"
+                                   >MemoryBuffers & ArrayViews</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/02-beginner/03-kernels-and-simple-programs/"
+                                   >Kernels & Simple Programs</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/02-beginner/04-structs/"
+                                   >Structs</a></li>
+                        
+                    
+                </ul>
+            </div>
+        
+            <div class="section">
+                <h5>Advanced</h5>
+                <ul>
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/03-advanced/01-memory-buffers-and-views/"
+                                   >Memory Buffers & Views</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/03-advanced/02-kernels/"
+                                   >Kernels</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/03-advanced/03-shared-memory/"
+                                   >Shared Memory</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/03-advanced/04-math-functions/"
+                                   >Math Functions</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/03-advanced/05-dynamically-specialized-kernels/"
+                                   >Dynamically Specialized Kernels</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/03-advanced/06-debugging-and-profiling/"
+                                   >Debugging & Profiling</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/03-advanced/07-inside-ilgpu/"
+                                   >Inside ILGPU</a></li>
+                        
+                    
+                </ul>
+            </div>
+        
+            <div class="section">
+                <h5>Upgrade Guides</h5>
+                <ul>
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/04-upgrade-guides/01-v0-8-x-to-v0-9-x/"
+                                   >v0.8.X to v0.9.X</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/04-upgrade-guides/02-v0-8-0-to-v0-8-1/"
+                                   >v0.8.0 to v0.8.1</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/04-upgrade-guides/03-v0-7-x-to-v0-8-x/"
+                                   >v0.7.X to v0.8.X</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/04-upgrade-guides/04-v0-6-x-to-v0-7-x/"
+                                   >v0.6.X to v0.7.X</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/04-upgrade-guides/05-v0-3-x-to-v0-5-x/"
+                                   >v0.3.X to v0.5.X</a></li>
+                        
+                    
+                        
+                        
+                            
+                            
+                            <li><a href="/docs/04-upgrade-guides/06-v0-1-x-to-v0-2-x/"
+                                   >v0.1.X to v0.2.X</a></li>
+                        
+                    
+                </ul>
+            </div>
+        
+        <ul>
+            
+        </ul>
+    </nav>
+
+    
+</section><!-- End Sidebar Section -->
+
+
+<main id="main">
+    
+
+
+<!-- ======= Breadcrumbs ======= -->
+<section id="breadcrumbs" class="breadcrumbs">
+    <div class="container">
+        <ol>
+            <li><a href="/">Home</a></li>
+            <li>Context & Accelerators</li>
+        </ol>
+        <h2>Context & Accelerators</h2>
+    </div>
+</section><!-- End Breadcrumbs -->
+
+
+    
+        <!-- ======= Inner Page Section ======= -->
+        <section id="wiki-main" class="inner-page collapsed">
+            <div class="container-fluid">
+                <h1 id="tutorial-01-context-device-and-accelerators">Tutorial 01 Context, Device, and Accelerators</h1>
+
+<p>Welcome to the first ILGPU tutorial! In this tutorial we will cover the basics of the Context, Device, and Accelerator
+objects.</p>
+
+<h2 id="context">Context</h2>
+
+<p>All ILGPU classes and functions rely on an instance of ILGPU.Context.
+The context’s job is mainly to act as an interface for the ILGPU compiler.
+I believe it also stores some global state.</p>
+
+<ul>
+  <li>requires: using ILGPU;</li>
+  <li>basic constructing: Context context = Context.CreateDefault();</li>
+</ul>
+
+<p>A context object, as well as most instances of classes that
+require a context, require dispose calls to prevent memory
+leaks. In most simple cases you can use the using pattern as
+such: using Context context = Context.CreateDefault();
+to make it harder to mess up. You can also see this in the first sample below.</p>
+
+<p>You can also use the Context Builder to change context settings, more on that in a later tutorial.</p>
+
+<p>For now all we need is a default context.</p>
+
+<h2 id="device">Device</h2>
+
+<p>Before version 1.0.0 ILGPU had no way to query device information without creating a full accelerator instance.
+ILGPU v1.0.0 added in the Device class to fix this issue.</p>
+
+<p>In ILGPU the Device represents the hardware in your computer.</p>
+
+<ul>
+  <li>requires: using ILGPU; and using ILGPU.Runtime;</li>
+</ul>
+
+<h3 id="list-devices-sample">List Devices Sample</h3>
+
+<p>Lists all devices that ILGPU can use.</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">ILGPU</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">ILGPU.Runtime</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="nc">Program</span>
+<span class="p">{</span>
+    <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">Context</span> <span class="n">context</span> <span class="p">=</span> <span class="n">Context</span><span class="p">.</span><span class="nf">Create</span><span class="p">(</span><span class="n">builder</span> <span class="p">=&gt;</span> <span class="n">builder</span><span class="p">.</span><span class="nf">AllAccelerators</span><span class="p">());</span>
+
+        <span class="k">foreach</span> <span class="p">(</span><span class="n">Device</span> <span class="n">device</span> <span class="k">in</span> <span class="n">context</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="n">device</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="accelerators">Accelerators</h2>
+
+<p>In ILGPU the accelerator represents a hardware or software GPU.
+Every ILGPU program will require at least 1 Accelerator.
+Currently there are 3 Accelerator types: CPU, Cuda, and OpenCL,
+as well as an abstract Accelerator.</p>
+
+<h3 id="device-info-example-see-also-device-info-sample">Device Info Example <a href="https://github.com/m4rs-mt/ILGPU/tree/master/Samples/DeviceInfo">See Also Device Info Sample</a></h3>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">ILGPU</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">ILGPU.Runtime</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">ILGPU.Runtime.CPU</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">ILGPU.Runtime.Cuda</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">ILGPU.Runtime.OpenCL</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.IO</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="nc">Program</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="c1">// Builds a context that has all possible accelerators.</span>
+        <span class="k">using</span> <span class="nn">Context</span> <span class="n">context</span> <span class="p">=</span> <span class="n">Context</span><span class="p">.</span><span class="nf">CreateDefault</span><span class="p">();</span>
+
+        <span class="c1">// Builds a context that only has CPU accelerators.</span>
+        <span class="c1">//using Context context = Context.Create(builder =&gt; builder.CPU());</span>
+
+        <span class="c1">// Builds a context that only has Cuda accelerators.</span>
+        <span class="c1">//using Context context = Context.Create(builder =&gt; builder.Cuda());</span>
+
+        <span class="c1">// Builds a context that only has OpenCL accelerators.</span>
+        <span class="c1">//using Context context = Context.Create(builder =&gt; builder.OpenCL());</span>
+
+        <span class="c1">// Builds a context with only OpenCL and Cuda acclerators.</span>
+        <span class="c1">//using Context context = Context.Create(builder =&gt;</span>
+        <span class="c1">//{</span>
+        <span class="c1">//    builder</span>
+        <span class="c1">//        .OpenCL()</span>
+        <span class="c1">//        .Cuda();</span>
+        <span class="c1">//});</span>
+
+        <span class="c1">// Prints all accelerators.</span>
+        <span class="k">foreach</span> <span class="p">(</span><span class="n">Device</span> <span class="n">d</span> <span class="k">in</span> <span class="n">context</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">using</span> <span class="nn">Accelerator</span> <span class="n">accelerator</span> <span class="p">=</span> <span class="n">d</span><span class="p">.</span><span class="nf">CreateAccelerator</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="n">accelerator</span><span class="p">);</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="nf">GetInfoString</span><span class="p">(</span><span class="n">accelerator</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="c1">// Prints all CPU accelerators.</span>
+        <span class="k">foreach</span> <span class="p">(</span><span class="n">CPUDevice</span> <span class="n">d</span> <span class="k">in</span> <span class="n">context</span><span class="p">.</span><span class="nf">GetCPUDevices</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="k">using</span> <span class="nn">CPUAccelerator</span> <span class="n">accelerator</span> <span class="p">=</span> <span class="p">(</span><span class="n">CPUAccelerator</span><span class="p">)</span><span class="n">d</span><span class="p">.</span><span class="nf">CreateAccelerator</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="n">accelerator</span><span class="p">);</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="nf">GetInfoString</span><span class="p">(</span><span class="n">accelerator</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="c1">// Prints all Cuda accelerators.</span>
+        <span class="k">foreach</span> <span class="p">(</span><span class="n">Device</span> <span class="n">d</span> <span class="k">in</span> <span class="n">context</span><span class="p">.</span><span class="nf">GetCudaDevices</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="k">using</span> <span class="nn">Accelerator</span> <span class="n">accelerator</span> <span class="p">=</span> <span class="n">d</span><span class="p">.</span><span class="nf">CreateAccelerator</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="n">accelerator</span><span class="p">);</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="nf">GetInfoString</span><span class="p">(</span><span class="n">accelerator</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="c1">// Prints all OpenCL accelerators.</span>
+        <span class="k">foreach</span> <span class="p">(</span><span class="n">Device</span> <span class="n">d</span> <span class="k">in</span> <span class="n">context</span><span class="p">.</span><span class="nf">GetCLDevices</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="k">using</span> <span class="nn">Accelerator</span> <span class="n">accelerator</span> <span class="p">=</span> <span class="n">d</span><span class="p">.</span><span class="nf">CreateAccelerator</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="n">accelerator</span><span class="p">);</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="nf">GetInfoString</span><span class="p">(</span><span class="n">accelerator</span><span class="p">));</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">static</span> <span class="kt">string</span> <span class="nf">GetInfoString</span><span class="p">(</span><span class="n">Accelerator</span> <span class="n">a</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">StringWriter</span> <span class="n">infoString</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">StringWriter</span><span class="p">();</span>
+        <span class="n">a</span><span class="p">.</span><span class="nf">PrintInformation</span><span class="p">(</span><span class="n">infoString</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">infoString</span><span class="p">.</span><span class="nf">ToString</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h5 id="cpuaccelerator">CPUAccelerator</h5>
+
+<ul>
+  <li>requires no special hardware… well no more than C# does.</li>
+  <li>requires: using ILGPU.CPU; and using ILGPU.Runtime;</li>
+  <li>basic constructing: Accelerator accelerator = context.CreateCPUAccelerator(0);</li>
+</ul>
+
+<p>The parameter of CreateCPUAccelerator denotes which cpu will be used if the context is constructed with multiple debug
+cpu acclerators.</p>
+
+<p>In general the CPUAccelerator is best for debugging and as a fallback. While the
+CPUAccelerator is slow it is the only way to use much of the debugging features built
+into C#. It is a good idea to write your program in such a way that you are able to switch to a CPUAcclerator to aid
+debugging.</p>
+
+<h5 id="cudaaccelerator">CudaAccelerator</h5>
+
+<ul>
+  <li>requires a supported CUDA capable gpu</li>
+  <li>imports: using ILGPU.Cuda; using ILGPU.Runtime;</li>
+  <li>basic constructing: Accelerator accelerator = context.CreateCudaAccelerator(0);</li>
+</ul>
+
+<p>The parameter of CreateCudaAccelerator denotes which gpu will be used in the case of a multi-gpu system.</p>
+
+<p>If you have one or more Nvida GPUs that are supported, this is the accelerator for
+you. What is supported is a complex question, but in general anything GTX 680 or
+newer should work. Some features require newer cards. Feature support should<sup>0</sup> match CUDA.</p>
+
+<h5 id="claccelerator">CLAccelerator</h5>
+
+<ul>
+  <li>requires an OpenCL 2.0+ capable gpu</li>
+  <li>imports: using ILGPU.OpenCL, using ILGPU.Runtime;</li>
+  <li>basic constructing: Accelerator accelerator = context.CreateCLAccelerator(0);</li>
+</ul>
+
+<p>The parameter of CreateCLAccelerator denotes which gpu will be used in the case of a multi-gpu system.
+NOTE: This is the <em>1st</em> OpenCL device usable by ILGPU and <em>not</em> the 1st OpenCL device of your machine.</p>
+
+<p>If you have one or more AMD or Intel GPUs that are supported this is
+the accelerator for you. Technically Nvidia GPUs support OpenCL but
+they are limited to OpenCL 1.2 which is essentially useless.
+Because of this, these tutorials need a bit of a disclaimer: I do not
+have an OpenCL 2.0 compatible GPU so most of the OpenCL stuff is untested.
+Please let me know if there are any issues.</p>
+
+<p>NOTE: OpenCL 3.0 makes this far more complex but still doesn’t fix the issue that Nvidia GPUs are unsupported.</p>
+
+<h5 id="accelerator">Accelerator</h5>
+
+<p>Abstract class for storing and passing around more specific
+accelerators.</p>
+
+<ul>
+  <li>requires: using ILGPU.Runtime</li>
+</ul>
+
+<h3 id="sample-0103">Sample 01|03</h3>
+
+<p>There is no guaranteed way to find the most powerful accelerator. If you are programming for
+known hardware you can, and should, just hardcode it. However, if you do need a method, ILGPU provides two.</p>
+
+<p>For a single device: context.GetPreferredDevice(preferCPU);</p>
+
+<p>For multiple devices: context.GetPreferredDevices(preferCPU, matchingDevicesOnly);</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">ILGPU</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">ILGPU.Runtime</span><span class="p">;</span>
+<span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="nc">Program</span>
+<span class="p">{</span>
+    <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">using</span> <span class="nn">Context</span> <span class="n">context</span> <span class="p">=</span> <span class="n">Context</span><span class="p">.</span><span class="nf">Create</span><span class="p">(</span><span class="n">builder</span> <span class="p">=&gt;</span> <span class="n">builder</span><span class="p">.</span><span class="nf">AllAccelerators</span><span class="p">());</span>
+        <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"Context: "</span> <span class="p">+</span> <span class="n">context</span><span class="p">.</span><span class="nf">ToString</span><span class="p">());</span>
+
+        <span class="n">Device</span> <span class="n">d</span> <span class="p">=</span> <span class="n">context</span><span class="p">.</span><span class="nf">GetPreferredDevice</span><span class="p">(</span><span class="n">preferCPU</span><span class="p">:</span> <span class="k">false</span><span class="p">);</span>
+        <span class="n">Accelerator</span> <span class="n">a</span> <span class="p">=</span> <span class="n">d</span><span class="p">.</span><span class="nf">CreateAccelerator</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+
+        <span class="n">a</span><span class="p">.</span><span class="nf">PrintInformation</span><span class="p">();</span>
+        <span class="n">a</span><span class="p">.</span><span class="nf">Dispose</span><span class="p">();</span>
+
+        <span class="k">foreach</span><span class="p">(</span><span class="n">Device</span> <span class="n">device</span> <span class="k">in</span> <span class="n">context</span><span class="p">.</span><span class="nf">GetPreferredDevices</span><span class="p">(</span><span class="n">preferCPU</span><span class="p">:</span> <span class="k">false</span><span class="p">,</span> <span class="n">matchingDevicesOnly</span><span class="p">:</span> <span class="k">false</span><span class="p">))</span>
+        <span class="p">{</span>
+            <span class="n">Accelerator</span> <span class="n">accelerator</span> <span class="p">=</span> <span class="n">device</span><span class="p">.</span><span class="nf">CreateAccelerator</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+            <span class="n">accelerator</span><span class="p">.</span><span class="nf">PrintInformation</span><span class="p">();</span>
+            <span class="n">accelerator</span><span class="p">.</span><span class="nf">Dispose</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Don’t forget to dispose the accelerator. We do not have to call dispose
+on context because we used the using pattern. It is important to note
+that you must dispose objects in the reverse order from when you obtain them.</p>
+
+<p>As you can see in the above sample, the context is obtained first and then
+the accelerator. We dispose the accelerator explicitly by calling accelerator.Dispose();
+and then only afterwards dispose the context automatically via the using pattern.</p>
+
+<p>The Device instances do not need to be disposed.</p>
+
+<p>In more complex programs you may have a more complex tree of memory, kernels, streams, and accelerators
+to dispose of correctly.</p>
+
+<p>Lets assume this is the structure of some program:</p>
+
+<ul>
+  <li>Context
+    <ul>
+      <li>CPUAccelerator
+        <ul>
+          <li>Some Memory</li>
+          <li>Some Kernel</li>
+        </ul>
+      </li>
+      <li>CudaAccelerator
+        <ul>
+          <li>Some Other Memory</li>
+          <li>Some Other Kernel</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>Anything created by the CPU accelerator must be disposed before the CPU accelerator
+can be disposed. And then the CPU accelerator must be disposed before the context can
+be disposed. However before we can dispose the context we must dispose the Cuda accelerator
+and everything that it owns.</p>
+
+<p>Ok, this tutorial covers most of the boiler plate code needed.</p>
+
+<p>The next tutorial covers memory.</p>
+
+<blockquote>
+  <p><sup>0</sup> Should is the programmers favorite word</p>
+
+  <p>- Me</p>
+
+  <p>In all seriousness your best bet is to test the features you want to use against the gpu you would like to use, or
+consult <a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#compute-capabilities">this</a> part of the cuda
+docs.</p>
+</blockquote>
+
+
+                
+    <div class="f5 contribution">
+        <h2>Help us make these docs great!</h2>
+        <p>All ILGPU docs are open source. See something that's wrong or unclear? Submit a
+            pull request.</p>
+        <a class="btn"
+           href="https://github.com/m4rs-mt/ILGPU/edit/master/Docs/02_Beginner/01_Context-and-Accelerators.md"
+           target="_blank" rel="noopener">
+            <svg aria-hidden="true" role="img" class="octicon mr-1" viewBox="0 0 16 16" width="16" height="16"
+                 fill="currentColor"
+                 style="display:inline-block;user-select:none;vertical-align:text-bottom;overflow:visible">
+                <path fill-rule="evenodd"
+                      d="M7.177 3.073L9.573.677A.25.25 0 0110 .854v4.792a.25.25 0 01-.427.177L7.177 3.427a.25.25 0 010-.354zM3.75 2.5a.75.75 0 100 1.5.75.75 0 000-1.5zm-2.25.75a2.25 2.25 0 113 2.122v5.256a2.251 2.251 0 11-1.5 0V5.372A2.25 2.25 0 011.5 3.25zM11 2.5h-1V4h1a1 1 0 011 1v5.628a2.251 2.251 0 101.5 0V5A2.5 2.5 0 0011 2.5zm1 10.25a.75.75 0 111.5 0 .75.75 0 01-1.5 0zM3.75 12a.75.75 0 100 1.5.75.75 0 000-1.5z"></path>
+            </svg>
+            Make a contribution</a>
+        <p class="color-fg-muted f6 mt-2">Or,<!-- --> <a
+                    href="https://github.com/m4rs-mt/ILGPU#general-contribution-guidelines"
+                    target="_blank" rel="noopener">learn how to contribute.</a>
+        </p>
+    </div>
+
+
+            </div>
+        </section><!-- End Inner Page Section -->
+    
+</main><!-- End #main -->
+<!-- ======= Footer ======= -->
+<footer id="footer">
+    <div class="container footer-bottom clearfix text-center">
+        <div>
+            &copy; Copyright
+            <script type="text/javascript">document.write(String(new Date().getFullYear()));</script>
+            <strong><span>ILGPU</span></strong>. All Rights Reserved.
+        </div>
+        
+        
+        
+    </div>
+</footer><!-- End Footer -->
+
+<div id="preloader"></div>
+<!-- loading Spinner -->
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center">
+    <i class="bi bi-arrow-up-short"></i>
+</a>
+<!-- Go to Top button -->
+
+<!-- ARSHA Vendor JS Files -->
+<script defer src="/assets/vendor/aos/aos.js"></script>
+<script defer src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script defer src="/assets/vendor/glightbox/js/glightbox.min.js"></script>
+<script defer src="/assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+<script defer src="/assets/vendor/swiper/swiper-bundle.min.js"></script>
+<script defer src="/assets/vendor/waypoints/noframework.waypoints.js"></script>
+<script defer src="/assets/vendor/php-email-form/validate.js"></script>
+<!-- ARSHA Vendor JS Files -->
+
+<!-- ARSHA Template Main JS File -->
+<script defer src="/assets/js/main.js"></script>
+<!-- ARSHA Template Main JS File -->
+
+    <!-- Dark Theme -->
+
+<!-- Dark Theme -->
+
+<!-- Search Feature -->
+
+    <script defer src="/assets/vendor/jquery/jquery-3.6.0.min.js"></script>
+    <script defer src="/assets/vendor/typeahead/typeahead.bundle.js"></script>
+    <script defer src="/assets/vendor/lunr/lunr.js"></script>
+    <script defer src="/assets/js/search.js"></script>
+    <script defer src="/assets/js/sidebar-collapse.js"></script>
+
+<!-- Search Feature -->
+
+<!-- Code Highlighting -->
+<script defer src="/assets/vendor/highlight/highlight.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        hljs.highlightAll();
+    })
+</script>
+<script defer src="/assets/vendor/prism/prism.js"></script>
+<!-- Code Highlighting -->
+
+
+
+
+
+</body>
+
+</html>
